@@ -14,14 +14,24 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['posisi']) && isset($_POST['email']) && isset($_POST['password'])) {
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $posisi = $_POST['posisi'];
-  $email = $_POST['email'];
-  $password = $_POST['password'];
+if (isset($_POST['id_spk']) && isset($_POST['tanggal']) && isset($_POST['place_fumigation']) && isset($_POST['jumlah_kontainer']) && isset($_POST['id_order']) && isset($_POST['id_order_container']) && isset($_POST['container']) && isset($_POST['volume']) && isset($_POST['fumigan']) && isset($_POST['dosis']) && isset($_POST['id_pegawai']) && isset($_POST['fumigator']) && isset($_POST['helper1']) && isset($_POST['helper2']) && isset($_POST['helper3'])) {
+  $idSPK = $_POST['id_spk'];
+  $tanggal = $_POST['tanggal'];
+  $placeFumigation = $_POST['place_fumigation'];
+  $jumlahKontainer = $_POST['jumlah_kontainer'];
+  $idOrder = $_POST['id_order'];
+  $idOrderContainer = $_POST['id_order_container'];
+  $container = $_POST['container'];
+  $volume = $_POST['volume'];
+  $fumigan = $_POST['fumigan'];
+  $dosis = $_POST['dosis'];
+  $idPegawai = $_POST['id_pegawai'];
+  $fumigator = $_POST['fumigator'];
+  $helper1 = $_POST['helper1'];
+  $helper2 = $_POST['helper2'];
+  $helper3 = $_POST['helper3'];
 
-  $query = "INSERT INTO data_user (username, nama_lengkap, posisi, email, password) VALUES ('$username', '$namaLengkap', '$posisi', '$email', '$password')";
+  $query = "INSERT INTO surat_perintah_kerja (id_spk, tanggal, place_fumigation, jumlah_kontainer, id_order, id_order_container, container, volume, fumigan, dosis, id_pegawai, fumigator, helper1, helper2, helper3) VALUES ('$idSPK', '$tanggal', '$placeFumigation', '$jumlahKontainer', '$idOrder', '$idOrderContainer', '$container', '$volume', '$fumigan', '$dosis', '$idPegawai', '$fumigator', '$helper1', '$helper2', '$helper3')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +41,24 @@ if (isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_posisi']) && isset($_POST['edit_email']) && isset($_POST['edit_password'])) {
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $posisi = $_POST['edit_posisi'];
-  $email = $_POST['edit_email'];
-  $password = $_POST['edit_password'];
+if (isset($_POST['edit_id_spk']) && isset($_POST['edit_tanggal']) && isset($_POST['edit_place_fumigation']) && isset($_POST['edit_jumlah_kontainer']) && isset($_POST['edit_id_order']) && isset($_POST['edit_id_order_container']) && isset($_POST['edit_container']) && isset($_POST['edit_volume']) && isset($_POST['edit_fumigan']) && isset($_POST['edit_dosis']) && isset($_POST['edit_id_pegawai']) && isset($_POST['edit_fumigator']) && isset($_POST['edit_helper1']) && isset($_POST['edit_helper2']) && isset($_POST['edit_helper3'])) {
+  $idSPK = $_POST['edit_id_spk'];
+  $tanggal = $_POST['edit_tanggal'];
+  $placeFumigation = $_POST['edit_place_fumigation'];
+  $jumlahKontainer = $_POST['edit_jumlah_kontainer'];
+  $idOrder = $_POST['edit_id_order'];
+  $idOrderContainer = $_POST['edit_id_order_container'];
+  $container = $_POST['edit_container'];
+  $volume = $_POST['edit_volume'];
+  $fumigan = $_POST['edit_fumigan'];
+  $dosis = $_POST['edit_dosis'];
+  $idPegawai = $_POST['edit_id_pegawai'];
+  $fumigator = $_POST['edit_fumigator'];
+  $helper1 = $_POST['edit_helper1'];
+  $helper2 = $_POST['edit_helper2'];
+  $helper3 = $_POST['edit_helper3'];
 
-  $query = "UPDATE data_user SET nama_lengkap='$namaLengkap', posisi='$posisi', email='$email', password='$password' WHERE username='$username'";
+  $query = "UPDATE surat_perintah_kerja SET tanggal='$tanggal', place_fumigation='$placeFumigation', jumlah_kontainer='$jumlahKontainer', id_order='$idOrder', id_order_container='$idOrderContainer', container='$container', volume='$volume', fumigan='$fumigan', dosis='$dosis', id_pegawai='$idPegawai', fumigator='$fumigator', helper1='$helper1', helper2='$helper2', helper3='$helper3' WHERE id_spk='$idSPK'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,10 +68,10 @@ if (isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isse
 }
 
 // Menangani penghapusan data
-if (isset($_GET['username'])) {
-  $username = $_GET['username'];
+if (isset($_GET['id_spk'])) {
+  $idSPK = $_GET['id_spk'];
 
-  $query = "DELETE FROM data_user WHERE username='$username'";
+  $query = "DELETE FROM surat_perintah_kerja WHERE id_spk='$idSPK'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -60,14 +80,14 @@ if (isset($_GET['username'])) {
   }
 }
 
-// Mengambil data dari tabel data_hpp_feet
-$query_select = "SELECT * FROM data_user";
+// Mengambil data dari tabel surat_perintah_kerja
+$query_select = "SELECT * FROM surat_perintah_kerja";
 $result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
 if (!$result_select) {
-  echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
-  exit();
+    echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
+    exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
@@ -82,7 +102,7 @@ if (!$result_select) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Surat Perintah Kerja</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
@@ -363,110 +383,190 @@ if (!$result_select) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Users</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Surat Perintah Kerja</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Users</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Operasional</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Surat Perintah Kerja</li> <!-- EDIT NAMA -->
             </ol>
           </div>
           <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
           <!-- Modal Tambah Data -->
           <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Tambah Data User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nama_lengkap" class="form-label">Nama Lengkap:</label>
-                                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
-                            </div>
-                            <div class="mb-3">
-                                  <label for="posisi" class="form-label">Posisi:</label>
-                                  <br>
-                                  <select class="form-select" id="posisi" name="posisi" required>
-                                    <option value="">Pilih Posisi</option>
-                                    <option value="Direktur">Direktur</option>
-                                    <option value="Manajer">Manajer</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Operasional">Operasional</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Fumigator">Fumigator</option>
-                                    <option value="Staff Lainnya">Staff Lainnya</option>
-                                  </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data Surat Perintah Kerja</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="id_spk" class="form-label">ID SPK:</label>
+                                  <input type="text" class="form-control" id="id_spk" name="id_spk" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="tanggal" class="form-label">Tanggal:</label>
+                                  <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="place_fumigation" class="form-label">Place Fumigation:</label>
+                                  <input type="text" class="form-control" id="place_fumigation" name="place_fumigation" value="Depo Pelindo Semarang" required readonly>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="jumlah_kontainer" class="form-label">Jumlah Kontainer:</label>
+                                  <input type="number" class="form-control" id="jumlah_kontainer" name="jumlah_kontainer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="id_order" class="form-label">ID Order:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="id_order" name="id_order" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="id_order_container" class="form-label">ID Order Container:</label>
+                                  <input type="text" class="form-control" id="id_order_container" name="id_order_container" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="container" class="form-label">Container:</label>
+                                  <input type="text" class="form-control" id="container" name="container" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="volume" class="form-label">Volume:</label>
+                                  <input type="text" class="form-control" id="volume" name="volume" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="fumigan" class="form-label">Fumigan:</label>
+                                  <input type="text" class="form-control" id="fumigan" name="fumigan" value="Methyl Bromide" required readonly>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="dosis" class="form-label">Dosis (g/m³):</label>
+                                  <input type="number" class="form-control" id="dosis" name="dosis" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="id_pegawai" class="form-label">ID Pegawai:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="fumigator" class="form-label">Fumigator:</label>
+                                  <input type="text" class="form-control" id="fumigator" name="fumigator" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="helper1" class="form-label">Helper 1:</label>
+                                  <input type="text" class="form-control" id="helper1" name="helper1">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="helper2" class="form-label">Helper 2:</label>
+                                  <input type="text" class="form-control" id="helper2" name="helper2">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="helper3" class="form-label">Helper 3:</label>
+                                  <input type="text" class="form-control" id="helper3" name="helper3">
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Edit Data -->
           <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Data User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="edit_username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="edit_username" name="edit_username" readonly required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_nama_lengkap" class="form-label">Nama Lengkap:</label>
-                                <input type="text" class="form-control" id="edit_nama_lengkap" name="edit_nama_lengkap" required>
-                            </div>
-                            <div class="mb-3">
-                                  <label for="edit_posisi" class="form-label">Posisi:</label>
-                                  <br>
-                                  <select class="form-select" id="edit_posisi" name="edit_posisi" required>
-                                    <option value="">Pilih Posisi</option>
-                                    <option value="Direktur">Direktur</option>
-                                    <option value="Manajer">Manajer</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Operasional">Operasional</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Fumigator">Fumigator</option>
-                                    <option value="Staff Lainnya">Staff Lainnya</option>
-                                  </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="edit_email" name="edit_email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="edit_password" name="edit_password" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Update</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Surat Perintah Kerja</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="edit_id_spk" class="form-label">ID SPK:</label>
+                                  <input type="text" class="form-control" id="edit_id_spk" name="edit_id_spk" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_tanggal" class="form-label">Tanggal:</label>
+                                  <input type="date" class="form-control" id="edit_tanggal" name="edit_tanggal" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_place_fumigation" class="form-label">Place Fumigation:</label>
+                                  <input type="text" class="form-control" id="edit_place_fumigation" name="edit_place_fumigation" value="Depo Pelindo Semarang" required readonly>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_jumlah_kontainer" class="form-label">Jumlah Kontainer:</label>
+                                  <input type="number" class="form-control" id="edit_jumlah_kontainer" name="edit_jumlah_kontainer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_id_order" class="form-label">ID Order:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="edit_id_order" name="edit_id_order" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_id_order_container" class="form-label">ID Order Container:</label>
+                                  <input type="text" class="form-control" id="edit_id_order_container" name="edit_id_order_container" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_container" class="form-label">Container:</label>
+                                  <input type="text" class="form-control" id="edit_container" name="edit_container" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_volume" class="form-label">Volume:</label>
+                                  <input type="text" class="form-control" id="edit_volume" name="edit_volume" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_fumigan" class="form-label">Fumigan:</label>
+                                  <input type="text" class="form-control" id="edit_fumigan" name="edit_fumigan" value="Methyl Bromide" required readonly>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_dosis" class="form-label">Dosis (g/m³):</label>
+                                  <input type="number" class="form-control" id="edit_dosis" name="edit_dosis" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_id_pegawai" class="form-label">ID Pegawai:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="edit_id_pegawai" name="edit_id_pegawai" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_fumigator" class="form-label">Fumigator:</label>
+                                  <input type="text" class="form-control" id="edit_fumigator" name="edit_fumigator" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_helper1" class="form-label">Helper 1:</label>
+                                  <input type="text" class="form-control" id="edit_helper1" name="edit_helper1">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_helper2" class="form-label">Helper 2:</label>
+                                  <input type="text" class="form-control" id="edit_helper2" name="edit_helper2">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_helper3" class="form-label">Helper 3:</label>
+                                  <input type="text" class="form-control" id="edit_helper3" name="edit_helper3">
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Hapus -->
           <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -514,13 +614,21 @@ if (!$result_select) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Surat Perintah Kerja</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                     <!-- Tombol Tambah dengan Icon -->
                     <div>
                       <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
                         Tambah
                       </button>
+                    </div>
+                    <!-- Tombol Filter Tanggal dengan Icon -->
+                    <div class="input-group">
+                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
+                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
+                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
+                          Filter
+                        </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
                     <div>
@@ -530,8 +638,17 @@ if (!$result_select) {
                     </div>
                   </div>
 
-                    <!-- Skrip JavaScript Cetak Tabel -->
+                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
                     <script>
+                    function filterTanggal() {
+                        var tanggalMulai = document.getElementById("tanggalMulai").value;
+                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
+                        
+                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
+                        // Anda dapat menambahkan logika Anda di sini
+                        console.log("Tanggal Mulai:", tanggalMulai);
+                        console.log("Tanggal Akhir:", tanggalAkhir);
+                    }
 
                     function cetakTabel() {
                         // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
@@ -547,29 +664,50 @@ if (!$result_select) {
                 <table class="table align-items-center table-flush table-hover" id="dataTableHover">
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
-                      <tr>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Posisi</th>
-                      <th>Email</th>
-                      <th>Password</th>
-                      <th>Aksi</th>
-                      </tr>
+                    <tr>
+                        <th>ID SPK</th>
+                        <th>Tanggal</th>
+                        <th>Place Fumigation</th>
+                        <th>Jumlah Kontainer</th>
+                        <th>ID Order</th>
+                        <th>ID Order Container</th>
+                        <th>Container</th>
+                        <th>Volume</th>
+                        <th>Fumigan</th>
+                        <th>Dosis</th>
+                        <th>ID Pegawai</th>
+                        <th>Fumigator</th>
+                        <th>Helper 1</th>
+                        <th>Helper 2</th>
+                        <th>Helper 3</th>
+                        <th>Aksi</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user";
+                    <?php
+                    $query = "SELECT * FROM surat_perintah_kerja";
                     $result = mysqli_query($conn, $query);
                     while ($data = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['email']."</td>";
-                        echo "<td>".$data['password']."</td>";
+                        echo "<td>".$data['id_spk']."</td>";
+                        echo "<td>".$data['tanggal']."</td>";
+                        echo "<td>".$data['place_fumigation']."</td>";
+                        echo "<td>".$data['jumlah_kontainer']."</td>";
+                        echo "<td>".$data['id_order']."</td>";
+                        echo "<td>".$data['id_order_container']."</td>";
+                        echo "<td>".$data['container']."</td>";
+                        echo "<td>".$data['volume']."</td>";
+                        echo "<td>".$data['fumigan']."</td>";
+                        echo "<td>".$data['dosis']."</td>";
+                        echo "<td>".$data['id_pegawai']."</td>";
+                        echo "<td>".$data['fumigator']."</td>";
+                        echo "<td>".$data['helper1']."</td>";
+                        echo "<td>".$data['helper2']."</td>";
+                        echo "<td>".$data['helper3']."</td>";
                         echo "<td>";
-                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['username']."\", \"".$data['nama_lengkap']."\", \"".$data['posisi']."\", \"".$data['email']."\", \"".$data['password']."\")'><i class='fas fa-edit'></i></button>";
-                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['username']."\")'><i class='fas fa-trash'></i></button>";
+                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['id_spk']."\", \"".$data['tanggal']."\", \"".$data['place_fumigation']."\", \"".$data['jumlah_kontainer']."\", \"".$data['id_order']."\", \"".$data['id_order_container']."\", \"".$data['container']."\", \"".$data['volume']."\", \"".$data['fumigan']."\", \"".$data['dosis']."\", \"".$data['id_pegawai']."\", \"".$data['fumigator']."\", \"".$data['helper1']."\", \"".$data['helper2']."\", \"".$data['helper3']."\")'><i class='fas fa-edit'></i></button>";
+                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['id_spk']."\")'><i class='fas fa-trash'></i></button>";
+                        echo "<a href='generate_pdf.php?id_spk=".htmlspecialchars($data['id_spk'])."' class='btn btn-primary btn-sm' style='width: 30px; height: 30px;' target='_blank' role='button'><i class='fas fa-print'></i></a>";
                         echo "</td>";
                         echo "</tr>"; 
                     }
@@ -612,15 +750,25 @@ if (!$result_select) {
   </a>
   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
   <script>
-    function openEditModal(username, namaLengkap, posisi, email) {
-      document.getElementById("edit_username").value = username;
-      document.getElementById("edit_nama_lengkap").value = namaLengkap;
-      document.getElementById("edit_posisi").value = posisi;
-      document.getElementById("edit_email").value = email;
-      document.getElementById("edit_password").value = password;
+    function openEditModal(idSpk, tanggal, placeFumigation, jumlahKontainer, idOrder, idOrderContainer, container, volume, fumigan, dosis, idPegawai, fumigator, helper1, helper2, helper3) {
+        document.getElementById("edit_id_spk").value = idSpk;
+        document.getElementById("edit_tanggal").value = tanggal;
+        document.getElementById("edit_place_fumigation").value = placeFumigation;
+        document.getElementById("edit_jumlah_kontainer").value = jumlahKontainer;
+        document.getElementById("edit_id_order").value = idOrder;
+        document.getElementById("edit_id_order_container").value = idOrderContainer;
+        document.getElementById("edit_container").value = container;
+        document.getElementById("edit_volume").value = volume;
+        document.getElementById("edit_fumigan").value = fumigan;
+        document.getElementById("edit_dosis").value = dosis;
+        document.getElementById("edit_id_pegawai").value = idPegawai;
+        document.getElementById("edit_fumigator").value = fumigator;
+        document.getElementById("edit_helper1").value = helper1;
+        document.getElementById("edit_helper2").value = helper2;
+        document.getElementById("edit_helper3").value = helper3;
     }
 
-    function openDeleteModal(username) {
+    function openDeleteModal(idSpk) {
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
             keyboard: false
         });
@@ -628,7 +776,7 @@ if (!$result_select) {
         
         // Tambahkan event listener pada tombol konfirmasi hapus
         document.getElementById('confirmDeleteBtn').onclick = function() {
-            window.location.href = "?username=" + username;
+            window.location.href = "?id_spk=" + idSpk;
         };
     }
   </script>

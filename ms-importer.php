@@ -14,14 +14,16 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (isset($_POST['id_importer']) && isset($_POST['nama_importer']) && isset($_POST['alamat_importer']) && isset($_POST['telp_importer']) && isset($_POST['fax']) && isset($_POST['usci']) && isset($_POST['pic'])) {
+  $idImporter = $_POST['id_importer'];
+  $namaImporter = $_POST['nama_importer'];
+  $alamatImporter = $_POST['alamat_importer'];
+  $telpImporter = $_POST['telp_importer'];
+  $fax = $_POST['fax'];
+  $usci = $_POST['usci'];
+  $pic = $_POST['pic'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
+  $query = "INSERT INTO data_importer (id_importer, nama_importer, alamat_importer, telp_importer, fax, usci, pic) VALUES ('$idImporter', '$namaImporter', '$alamatImporter', '$telpImporter', '$fax', '$usci', '$pic')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +33,16 @@ if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['u
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_id_importer']) && isset($_POST['edit_nama_importer']) && isset($_POST['edit_alamat_importer']) && isset($_POST['edit_telp_importer']) && isset($_POST['edit_fax']) && isset($_POST['edit_usci']) && isset($_POST['edit_pic'])) {
+  $idImporter = $_POST['edit_id_importer'];
+  $namaImporter = $_POST['edit_nama_importer'];
+  $alamatImporter = $_POST['edit_alamat_importer'];
+  $telpImporter = $_POST['edit_telp_importer'];
+  $fax = $_POST['edit_fax'];
+  $usci = $_POST['edit_usci'];
+  $pic = $_POST['edit_pic'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
+  $query = "UPDATE data_importer SET nama_importer='$namaImporter', alamat_importer='$alamatImporter', telp_importer='$telpImporter', fax='$fax', usci='$usci', pic='$pic' WHERE id_importer='$idImporter'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,13 +52,10 @@ if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['id_importer'])) {
+  $idImporter = $_GET['id_importer'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
+  $query = "DELETE FROM data_importer WHERE id_importer='$idImporter'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -63,13 +64,13 @@ if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['user
   }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel data_importer
+$query_select = "SELECT * FROM data_importer";
+$result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
+if (!$result_select) {
+  echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
   exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
@@ -85,10 +86,11 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Importer</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
@@ -365,11 +367,124 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Importer</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item active" aria-current="page">Importer</li> <!-- EDIT NAMA -->
             </ol>
+          </div>
+          <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+          <!-- Modal Tambah Data -->
+          <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data Importer</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="id_importer" class="form-label">ID Importer:</label>
+                                  <input type="text" class="form-control" id="id_importer" name="id_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nama_importer" class="form-label">Nama Importer:</label>
+                                  <input type="text" class="form-control" id="nama_importer" name="nama_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="alamat_importer" class="form-label">Alamat Importer:</label>
+                                  <input type="text" class="form-control" id="alamat_importer" name="alamat_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="telp_importer" class="form-label">Telepon Importer:</label>
+                                  <input type="text" class="form-control" id="telp_importer" name="telp_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="fax" class="form-label">Fax:</label>
+                                  <input type="text" class="form-control" id="fax" name="fax">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="usci" class="form-label">USCI:</label>
+                                  <input type="text" class="form-control" id="usci" name="usci">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="pic" class="form-label">PIC:</label>
+                                  <input type="text" class="form-control" id="pic" name="pic">
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Edit Data -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Importer</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="edit_id_importer" class="form-label">ID Importer:</label>
+                                  <input type="text" class="form-control" id="edit_id_importer" name="edit_id_importer" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_importer" class="form-label">Nama Importer:</label>
+                                  <input type="text" class="form-control" id="edit_nama_importer" name="edit_nama_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_alamat_importer" class="form-label">Alamat Importer:</label>
+                                  <input type="text" class="form-control" id="edit_alamat_importer" name="edit_alamat_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_telp_importer" class="form-label">Telepon Importer:</label>
+                                  <input type="text" class="form-control" id="edit_telp_importer" name="edit_telp_importer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_fax" class="form-label">Fax:</label>
+                                  <input type="text" class="form-control" id="edit_fax" name="edit_fax">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_usci" class="form-label">USCI:</label>
+                                  <input type="text" class="form-control" id="edit_usci" name="edit_usci">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_pic" class="form-label">PIC:</label>
+                                  <input type="text" class="form-control" id="edit_pic" name="edit_pic">
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
+                      <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Konfirmasi Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -391,6 +506,7 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
@@ -398,15 +514,13 @@ if (!$result_select_logs) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Importer</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <!-- Tombol Filter Tanggal dengan Icon -->
-                    <div class="input-group">
-                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
-                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
-                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
-                          Filter
-                        </button>
+                    <!-- Tombol Tambah dengan Icon -->
+                    <div>
+                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
+                        Tambah
+                      </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
                     <div>
@@ -416,22 +530,12 @@ if (!$result_select_logs) {
                     </div>
                   </div>
 
-                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
+                    <!-- Skrip JavaScript untukCetak Tabel -->
                     <script>
-                    function filterTanggal() {
-                        var tanggalMulai = document.getElementById("tanggalMulai").value;
-                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
-                        
-                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
-                        // Anda dapat menambahkan logika Anda di sini
-                        console.log("Tanggal Mulai:", tanggalMulai);
-                        console.log("Tanggal Akhir:", tanggalAkhir);
-                    }
-
                     function cetakTabel() {
                         // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
                         filterTanggal(); // Memanggil fungsi filterTanggal() untuk mendapatkan rentang tanggal yang dipilih
-                        
+                         
                         // Lakukan pencetakan sesuai dengan rentang tanggal yang dipilih
                         window.print();
                     }
@@ -443,25 +547,32 @@ if (!$result_select_logs) {
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
                       <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
+                          <th>ID Importer</th>
+                          <th>Nama Importer</th>
+                          <th>Alamat Importer</th>
+                          <th>Telepon Importer</th>
+                          <th>FAX</th>
+                          <th>USCI</th>
+                          <th>PIC</th>
+                          <th>Aksi</th>
                       </tr>
                   </thead>
                   <tbody>
                   <?php
-                    $query = "SELECT * FROM data_user_logs";
+                    $query = "SELECT * FROM data_importer";
                     $result = mysqli_query($conn, $query);
                     while ($data = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
+                        echo "<td>".$data['id_importer']."</td>";
+                        echo "<td>".$data['nama_importer']."</td>";
+                        echo "<td>".$data['alamat_importer']."</td>";
+                        echo "<td>".$data['telp_importer']."</td>";
+                        echo "<td>".$data['fax']."</td>";
+                        echo "<td>".$data['usci']."</td>";
+                        echo "<td>".$data['pic']."</td>";
                         echo "<td>";
+                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['id_importer']."\", \"".$data['nama_importer']."\", \"".$data['alamat_importer']."\", \"".$data['telp_importer']."\", \"".$data['fax']."\", \"".$data['usci']."\", \"".$data['pic']."\")'><i class='fas fa-edit'></i></button>";
+                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['id_importer']."\")'><i class='fas fa-trash'></i></button>";
                         echo "</td>";
                         echo "</tr>"; 
                     }
@@ -502,6 +613,31 @@ if (!$result_select_logs) {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+  <script>
+    function openEditModal(idImporter, namaImporter, alamatImporter, telpImporter, fax, usci, pic) {
+      document.getElementById("edit_id_importer").value = idImporter;
+      document.getElementById("edit_nama_importer").value = namaImporter;
+      document.getElementById("edit_alamat_importer").value = alamatImporter;
+      document.getElementById("edit_telp_importer").value = telpImporter;
+      document.getElementById("edit_fax").value = fax;
+      document.getElementById("edit_usci").value = usci;
+      document.getElementById("edit_pic").value = pic;
+    }
+
+    function openDeleteModal(idImporter) {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+            keyboard: false
+        });
+        deleteModal.show();
+        
+        // Tambahkan event listener pada tombol konfirmasi hapus
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            window.location.href = "?id_importer=" + idImporter;
+        };
+    }
+  </script>
+  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>

@@ -1,80 +1,3 @@
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "simitra";
-
-// Membuat koneksi
-$conn = mysqli_connect($servername, $username, $password, $database);
-
-// Memeriksa koneksi
-if (!$conn) {
-    die("Koneksi gagal: " . mysqli_connect_error());
-}
-
-// AWAL EDIT SESUAIKAN TABEL DATABASE
-// Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
-
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
-  $result = mysqli_query($conn, $query);
-
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
-      exit();
-  }
-}
-
-// Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
-
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
-  $result = mysqli_query($conn, $query);
-
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
-      exit();
-  }
-}
-
-// Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
-
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
-  $result = mysqli_query($conn, $query);
-
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
-      exit();
-  }
-}
-
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
-
-// Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
-  exit();
-}
-// AKHIR EDIT SESUAIKAN TABEL DATABASE
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -85,13 +8,36 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Profile</title>
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
-  <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
+<style>
+  .upload-file-container {
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 5px;
+    max-width: 300px; /* Lebar maksimum */
+    min-width: 150px; /* Lebar minimum */
+    overflow: hidden;
+  }
 
+  .custom-file-upload {
+      background-color: #666;
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+
+  #file-chosen {
+      margin-left: 10px;
+      color: #666;
+  }
+</style>
 <body id="page-top">
   <div id="wrapper">
     <!-- Sidebar -->
@@ -106,7 +52,7 @@ if (!$result_select_logs) {
       <li class="nav-item active">
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <span>Profile</span></a>
       </li>
       <hr class="sidebar-divider">
       <li class="nav-item">
@@ -224,15 +170,17 @@ if (!$result_select_logs) {
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#logoutModal">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
+        <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
         </a>
       </li>
     </ul>
     <!-- Sidebar -->
-
+    
     <!-- Sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
@@ -356,172 +304,159 @@ if (!$result_select_logs) {
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
               </div>
             </li>
           </ul>
         </nav>
         <!-- Topbar -->
+
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
-          <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Profile</h1>
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Profile</li>
             </ol>
           </div>
-          <!-- Modal Konfirmasi Logout -->
-          <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                          </button>
-                      </div>
-                      <div class="modal-body">
-                          Apakah Anda Yakin Ingin Keluar dari Sistem?
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                          <a href="login.html" class="btn btn-primary">Logout</a>
-                      </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="edit-profile">
+                  <div class="edit-profile-image">
+                      <label for="profile-image-upload" class="profile-image-label">
+                          <img class="img-profile rounded-circle" id="profile-image-preview" src="img/girl.png" style="max-width: 300px">
+                          <input type="file" id="profile-image-upload" style="display: none;" onchange="previewImage()">
+                      </label>
+                  </div>
+                  <div class="upload-file-container">
+                      <label for="profile-image-upload" class="custom-file-upload">
+                          Choose File
+                      </label>
+                      <span id="file-chosen">No file chosen</span>
                   </div>
               </div>
-          </div>
-
-          <!-- Row -->
-          <div class="row">
-            <!-- DataTable with Hover -->
-            <div class="col-lg-12">
-              <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
-                  <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <!-- Tombol Filter Tanggal dengan Icon -->
-                    <div class="input-group">
-                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
-                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
-                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
-                          Filter
-                        </button>
-                    </div>
-                    <!-- Tombol Cetak Tabel dengan Icon -->
-                    <div>
-                      <button type="button" class="btn btn-sm btn-warning" style='width: 60px; height: 30px;' onclick="cetakTabel()">
-                        Cetak
-                      </button>
-                    </div>
+            </div>                              
+            <div class="col-md-5">
+              <div class="edit-profile-details">
+                  <div class="form-group">
+                      <label for="exampleInputUsername">Username</label>
+                      <input type="text" class="form-control" id="exampleInputUsername" placeholder="Enter Username">
                   </div>
-
-                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
-                    <script>
-                    function filterTanggal() {
-                        var tanggalMulai = document.getElementById("tanggalMulai").value;
-                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
+                  <div class="form-group">
+                      <label for="exampleInputNamaLengkap">Nama Lengkap</label>
+                      <input type="text" class="form-control" id="exampleInputNamaLengkap" placeholder="Enter Nama Lengkap">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputPosisi">Posisi</label>
+                      <input type="text" class="form-control" id="exampleInputPosisi" placeholder="Enter Posisi">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail">Email</label>
+                      <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputPassword">Password</label>
+                      <input type="password" class="form-control" id="exampleInputPassword" placeholder="Enter New Password">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleReenterPassword">Reenter Password</label>
+                      <input type="password" class="form-control" id="exampleReenterPassword" placeholder="Reenter New Password">
+                  </div>
+                  <!-- Tombol Save -->
+                  <button class="btn btn-primary" onclick="saveProfile()">Save</button>
+                  <!-- Tombol Batal -->
+                  <button class="btn btn-secondary" onclick="cancelProfile()">Cancel</button>
+              </div>
+            </div>                      
+        </div>
+        
                         
-                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
-                        // Anda dapat menambahkan logika Anda di sini
-                        console.log("Tanggal Mulai:", tanggalMulai);
-                        console.log("Tanggal Akhir:", tanggalAkhir);
-                    }
 
-                    function cetakTabel() {
-                        // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
-                        filterTanggal(); // Memanggil fungsi filterTanggal() untuk mendapatkan rentang tanggal yang dipilih
-                        
-                        // Lakukan pencetakan sesuai dengan rentang tanggal yang dipilih
-                        window.print();
-                    }
-                    </script>
+          <!-- Modal Logout -->
+          <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelLogout">LOGOUT - SIMITRA</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
-                
-                <div class="table-responsive p-3">
-                <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
-                  <thead class="thead-light">
-                      <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user_logs";
-                    $result = mysqli_query($conn, $query);
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
-                        echo "<td>";
-                        echo "</td>";
-                        echo "</tr>"; 
-                    }
-                  ?>
-                  </tbody>
-                  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
-                </table>
+                <div class="modal-body">
+                  <p>Yakin ingin logout dari sistem?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                  <a href="login.html" class="btn btn-primary">Logout</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <!---Container Fluid-->
       </div>
     </div>
-  
-  <!-- Footer -->
-  <footer>
-    <p id="tanggalJam" style="font-size: 12px; margin: 0; justify-content: flex-end; display: flex; background-color: #f8f9fa;"></p>
-  </footer>
-
-  <script>
-    function updateTanggalJam() {
-      var date = new Date();
-      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      var formattedDate = date.toLocaleDateString('id-ID', options);
-      document.getElementById('tanggalJam').textContent = formattedDate;
-    }
-
-    // Memanggil fungsi untuk pertama kali saat halaman dimuat
-    updateTanggalJam();
-
-    // Memperbarui tanggal dan jam setiap detik
-    setInterval(updateTanggalJam, 1000);
-  </script>
-  <!-- Footer -->
   </div>
 
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-     
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/simitra.min.js"></script>
-  <!-- Page level plugins -->
-  <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-  <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="vendor/chart.js/Chart.min.js"></script>
+  <script src="js/demo/chart-area-demo.js"></script>  
 
-  <!-- Page level custom scripts -->
-  <script>
-    $(document).ready(function () {
-      $('#dataTableHover').DataTable();
-    });
-  </script>
+    <!-- Footer -->
+    <footer>
+      <p id="tanggalJam" style="font-size: 12px; margin: 0; justify-content: flex-end; display: flex; background-color: #f8f9fa;"></p>
+    </footer>
+  
+<script>
+      function updateTanggalJam() {
+        var date = new Date();
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        var formattedDate = date.toLocaleDateString('id-ID', options);
+        document.getElementById('tanggalJam').textContent = formattedDate;
+      }
+  
+      // Memanggil fungsi untuk pertama kali saat halaman dimuat
+      updateTanggalJam();
+  
+      // Memperbarui tanggal dan jam setiap detik
+      setInterval(updateTanggalJam, 1000);
+
+      function previewImage() {
+      var fileInput = document.getElementById('profile-image-upload');
+      var fileChosen = document.getElementById('file-chosen');
+      var imagePreview = document.getElementById('profile-image-preview');
+
+      if (fileInput.files.length > 0) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              imagePreview.src = e.target.result;
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+
+          fileChosen.textContent = fileInput.files[0].name;
+      } else {
+          fileChosen.textContent = 'No file chosen';
+          imagePreview.src = 'img/girl.png'; // Set default image jika tidak ada file yang dipilih
+      }
+  }
+
+</script>
+    <!-- Footer -->
 </body>
 
 </html>
-<?php
-mysqli_close($conn);
-?>

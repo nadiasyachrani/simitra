@@ -12,65 +12,102 @@
   <title>SIMITRA - Register</title>
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #38B6FF, #44489A);
+      margin: 0; 
+      padding: 0;
+    }
 
+    .text-center a {
+      color: white; /* Mengatur warna teks menjadi putih */
+    }
+
+    .btn-primary {
+      background-color: rgba(255, 255, 255, 0.5); 
+      border-color: transparent; 
+      color: #000; 
+    }
+
+    .btn-primary:hover {
+      background-color: rgba(255, 255, 255, 0.7); 
+    }
+
+
+    .form-group label {
+      color: white; 
+      margin-right: 10px;
+    }
+
+    /* CSS untuk input */
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+      background-color: rgba(255, 255, 255, 0.2); 
+      border: none; 
+      color: white;
+      flex: 1; 
+    }
+
+    .form-group .toggle-password {
+      color: rgba(255, 255, 255, 0.3); 
+    }
+
+  </style>
 </head>
-
-<body class="bg-gradient-login">
-  <!-- Register Content -->
-  <div class="container-login">
+  <div class="container-login2">
     <div class="row justify-content-center">
       <div class="col-xl-10 col-lg-12 col-md-9">
-        <div class="card shadow-sm my-5">
-          <div class="card-body p-0">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="login-form">
-                  <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Register</h1>
-                  </div>
-                  <form>
-                    <div class="form-group">
-                      <label>Username</label>
-                      <input type="text" class="form-control" id="exampleInputUsername" placeholder="Enter UUsername">
-                    </div>
-                    <div class="form-group">
-                      <label>Nama Lengkap</label>
-                      <input type="text" class="form-control" id="exampleInputNamaLengkap" placeholder="Enter Nama Lengkap">
-                    </div>
-                    <div class="form-group">
-                      <label>Posisi</label>
-                      <input type="text" class="form-control" id="exampleInputPosisi" placeholder="Enter Posisi">
-                    </div>
-                    <div class="form-group">
-                      <label>Email</label>
-                      <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                        placeholder="Enter Email Address">
-                    </div>
-                    <div class="form-group">
-                      <label>Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                      <label>Repeat Password</label>
-                      <input type="password" class="form-control" id="exampleInputPasswordRepeat"
-                        placeholder="Repeat Password">
-                    </div>
-                    <div class="form-group">
-                      <button type="submit" class="btn btn-primary btn-block">Register</button>
-                    </div>
-                  </form>
-                  <hr>
-                  <div class="text-center">
-                    <a class="font-weight-bold small" href="login.html">Already have an account?</a>
-                  </div>
-                  <div class="text-center">
-                  </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="login-form">
+              <div class="text-center">
+                <img class="logo" src="img/logo/logoo.png" alt="Logo" style="width: 160px;">
+                <h5 style="color: white;">Sistem Informasi Akuntansi
+                <br>PT Mitra Indo Maju Mandiri</h5>
+              </div>
+              <br>
+              <form>
+                <div class="form-group" style="display: flex; align-items: center;">
+                  <label for="exampleInputUsername">Username</label>
+                  <input type="text" class="form-control" id="exampleInputUsername" placeholder="Enter Username" style="flex: 1;">
+                </div>                                       
+                <div class="form-group" style="display: flex; align-items: center;">
+                  <label for="exampleInputNamaLengkap">Nama Lengkap</label>
+                  <input type="text" class="form-control" id="exampleInputNamaLengkap" placeholder="Enter Nama Lengkap" style="flex: 1;">
                 </div>
+                <div class="form-group" style="display: flex; align-items: center;">
+                    <label for="exampleInputPosisi">Posisi</label>
+                    <input type="text" class="form-control" id="exampleInputPosisi" placeholder="Enter Posisi" style="flex: 1;">
+                </div>
+                <div class="form-group" style="display: flex; align-items: center;">
+                    <label for="exampleInputEmail">Email</label>
+                    <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address" style="flex: 1;">
+                </div>
+                <div class="form-group" style="position: relative;">
+                    <label for="exampleInputPassword">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword" placeholder="Enter Password">
+                    <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility('exampleInputPassword')" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"></i>
+                </div>
+                <div class="form-group" style="position: relative;">
+                    <label for="exampleReenterPassword">Reenter Password</label>
+                    <input type="password" class="form-control" id="exampleReenterPassword" placeholder="Reenter Password">
+                    <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility('exampleReenterPassword')" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"></i>
+                </div>                    
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary btn-block">Register</button>
+                </div>
+              </form>
+              <hr>
+              <div class="text-center">
+                <a class="font-weight-bold small" href="login.html">Already have an account?</a>
+              </div>
+              <div class="text-center">
               </div>
             </div>
           </div>
-        </div>
+        </div>          
       </div>
     </div>
   </div>
@@ -80,5 +117,20 @@
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/simitra.min.js"></script>
 </body>
+<script>
+  function togglePasswordVisibility(inputId) {
+    var passwordInput = document.getElementById(inputId);
+    var icon = document.querySelector('#' + inputId + '+ .toggle-password'); // Cari ikon toggle yang terkait dengan input
 
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    } else {
+        passwordInput.type = "password";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    }
+}
+</script>
 </html>

@@ -14,14 +14,30 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (isset($_POST['no_persyaratan']) && isset($_POST['id_order']) && isset($_POST['id_order_container']) && isset($_POST['tanggal_order']) && isset($_POST['nama_driver']) && isset($_POST['telp_driver']) && isset($_FILES['shipment_instruction']) && isset($_FILES['packing_list'])) {
+  $noPersyaratan = $_POST['no_persyaratan'];
+  $idOrder = $_POST['id_order'];
+  $idOrderContainer = $_POST['id_order_container'];
+  $tanggalOrder = $_POST['tanggal_order'];
+  $namaDriver = $_POST['nama_driver'];
+  $telpDriver = $_POST['telp_driver'];
+  $shipmentInstructionFileName = $_FILES['shipment_instruction']['name'];
+  $packingListFileName = $_FILES['packing_list']['name'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
+  // Pemeriksaan dan pembuatan direktori "uploads" jika belum ada
+  $uploadDirectory = 'uploads/';
+  if (!file_exists($uploadDirectory)) {
+      mkdir($uploadDirectory, 0777, true);
+  }
+
+  // Pindahkan file yang diunggah ke direktori yang diinginkan
+  $shipmentInstructionFilePath = $uploadDirectory . $shipmentInstructionFileName;
+  $packingListFilePath = $uploadDirectory . $packingListFileName;
+  move_uploaded_file($_FILES['shipment_instruction']['tmp_name'], $shipmentInstructionFilePath);
+  move_uploaded_file($_FILES['packing_list']['tmp_name'], $packingListFilePath);
+
+  // Query untuk menyimpan data ke dalam database
+  $query = "INSERT INTO data_persyaratan (no_persyaratan, id_order, id_order_container, tanggal_order, nama_driver, telp_driver, shipment_instruction, packing_list) VALUES ('$noPersyaratan', '$idOrder', '$idOrderContainer', '$tanggalOrder', '$namaDriver', '$telpDriver', '$shipmentInstructionFileName', '$packingListFileName')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +47,53 @@ if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['u
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_no_persyaratan']) && isset($_POST['edit_id_order']) && isset($_POST['edit_id_order_container']) && isset($_POST['edit_tanggal_order']) && isset($_POST['edit_nama_driver']) && isset($_POST['edit_telp_driver'])) {
+  $noPersyaratan = $_POST['edit_no_persyaratan'];
+  $idOrder = $_POST['edit_id_order'];
+  $idOrderContainer = $_POST['edit_id_order_container'];
+  $tanggalOrder = $_POST['edit_tanggal_order'];
+  $namaDriver = $_POST['edit_nama_driver'];
+  $telpDriver = $_POST['edit_telp_driver'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
+  // Inisialisasi variabel untuk nama file yang baru
+  $newShipmentInstructionFileName = '';
+  $newPackingListFileName = '';
+
+  // Pemeriksaan dan pembuatan direktori "uploads" jika belum ada
+  $uploadDirectory = 'uploads/';
+  if (!file_exists($uploadDirectory)) {
+      mkdir($uploadDirectory, 0777, true);
+  }
+
+  // Periksa apakah ada pembaruan file Shipment Instruction
+  if (!empty($_FILES['edit_shipment_instruction']['name'])) {
+      $newShipmentInstructionFileName = $_FILES['edit_shipment_instruction']['name'];
+      $newShipmentInstructionFilePath = $uploadDirectory . $newShipmentInstructionFileName;
+      move_uploaded_file($_FILES['edit_shipment_instruction']['tmp_name'], $newShipmentInstructionFilePath);
+  }
+
+  // Periksa apakah ada pembaruan file Packing List
+  if (!empty($_FILES['edit_packing_list']['name'])) {
+      $newPackingListFileName = $_FILES['edit_packing_list']['name'];
+      $newPackingListFilePath = $uploadDirectory . $newPackingListFileName;
+      move_uploaded_file($_FILES['edit_packing_list']['tmp_name'], $newPackingListFilePath);
+  }
+
+  // Query untuk pembaruan data
+  $query = "UPDATE data_persyaratan SET id_order='$idOrder', id_order_container='$idOrderContainer', tanggal_order='$tanggalOrder', nama_driver='$namaDriver', telp_driver='$telpDriver'";
+
+  // Jika ada pembaruan file Shipment Instruction, tambahkan nama file baru ke dalam query
+  if ($newShipmentInstructionFileName !== '') {
+      $query .= ", shipment_instruction='$newShipmentInstructionFileName'";
+  }
+
+  // Jika ada pembaruan file Packing List, tambahkan nama file baru ke dalam query
+  if ($newPackingListFileName !== '') {
+      $query .= ", packing_list='$newPackingListFileName'";
+  }
+
+  $query .= " WHERE no_persyaratan='$noPersyaratan'";
+
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,13 +103,10 @@ if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['no_persyaratan'])) {
+  $noPersyaratan = $_GET['no_persyaratan'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
+  $query = "DELETE FROM data_persyaratan WHERE no_persyaratan='$noPersyaratan'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -63,14 +115,14 @@ if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['user
   }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel data_persyaratan
+$query_select = "SELECT * FROM data_persyaratan";
+$result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
-  exit();
+if (!$result_select) {
+    echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
+    exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
@@ -85,10 +137,11 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Dokumen Order</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
@@ -365,11 +418,146 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Dokumen Order</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Penerimaan Jasa</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Dokumen Order</li> <!-- EDIT NAMA -->
             </ol>
+          </div>
+          <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+          <!-- Modal Tambah Data -->
+          <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Tambah Data Persyaratan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="no_persyaratan" class="form-label">No Persyaratan:</label>
+                                <input type="text" class="form-control" id="no_persyaratan" name="no_persyaratan" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_order" class="form-label">ID Order:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_order" name="id_order" required>
+                                    <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                        <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_order_container" class="form-label">ID Order Container:</label>
+                                <input type="text" class="form-control" id="id_order_container" name="id_order_container" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tanggal_order" class="form-label">Tanggal Order:</label>
+                                <input type="date" class="form-control" id="tanggal_order" name="tanggal_order" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nama_driver" class="form-label">Nama Driver:</label>
+                                <input type="text" class="form-control" id="nama_driver" name="nama_driver" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telp_driver" class="form-label">Telp Driver:</label>
+                                <input type="text" class="form-control" id="telp_driver" name="telp_driver" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="shipment_instruction" class="form-label">Shipment Instruction:</label>
+                                <input type="file" class="form-control" id="shipment_instruction" name="shipment_instruction" onchange="displayFileName(this, 'shipment_instruction_filename')">
+                                <span id="shipment_instruction_filename"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label for="packing_list" class="form-label">Packing List:</label>
+                                <input type="file" class="form-control" id="packing_list" name="packing_list" onchange="displayFileName(this, 'packing_list_filename')">
+                                <span id="packing_list_filename"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <!-- Modal Edit Data -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Persyaratan</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST" enctype="multipart/form-data">
+                              <div class="mb-3">
+                                  <label for="edit_no_persyaratan" class="form-label">No Persyaratan:</label>
+                                  <input type="text" class="form-control" id="edit_no_persyaratan" name="edit_no_persyaratan" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_id_order" class="form-label">ID Order:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="edit_id_order" name="edit_id_order" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_id_order_container" class="form-label">ID Order Container:</label>
+                                  <input type="text" class="form-control" id="edit_id_order_container" name="edit_id_order_container" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_tanggal_order" class="form-label">Tanggal Order:</label>
+                                  <input type="date" class="form-control" id="edit_tanggal_order" name="edit_tanggal_order" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_driver" class="form-label">Nama Driver:</label>
+                                  <input type="text" class="form-control" id="edit_nama_driver" name="edit_nama_driver" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_telp_driver" class="form-label">Telp Driver:</label>
+                                  <input type="text" class="form-control" id="edit_telp_driver" name="edit_telp_driver" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="edit_shipment_instruction" class="form-label">Shipment Instruction:</label>
+                                <input type="file" class="form-control" id="edit_shipment_instruction" name="edit_shipment_instruction" onchange="displayFileName(this, 'shipment_instruction_filename')">
+                                <span id="shipment_instruction_filename"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_packing_list" class="form-label">Packing List:</label>
+                                <input type="file" class="form-control" id="edit_packing_list" name="edit_packing_list" onchange="displayFileName(this, 'packing_list_filename')">
+                                <span id="packing_list_filename"></span>
+                            </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
+                      <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Konfirmasi Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -391,6 +579,7 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
@@ -398,8 +587,14 @@ if (!$result_select_logs) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Dokumen Order</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <!-- Tombol Tambah dengan Icon -->
+                    <div>
+                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
+                        Tambah
+                      </button>
+                    </div>
                     <!-- Tombol Filter Tanggal dengan Icon -->
                     <div class="input-group">
                       <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
@@ -443,25 +638,38 @@ if (!$result_select_logs) {
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
                       <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
+                          <th>No Persyaratan</th>
+                          <th>Id Order</th>
+                          <th>Id Order Container</th>
+                          <th>Tanggal Order</th>
+                          <th>Nama Driver</th>
+                          <th>Telp Driver</th>
+                          <th>Berkas Shipment Instruction</th>
+                          <th>Berkas Packing List</th>
+                          <th>Status</th>
+                          <th>Aksi</th>
                       </tr>
                   </thead>
                   <tbody>
                   <?php
-                    $query = "SELECT * FROM data_user_logs";
+                    $query = "SELECT * FROM data_persyaratan";
                     $result = mysqli_query($conn, $query);
                     while ($data = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
+                        echo "<td>".$data['no_persyaratan']."</td>";
+                        echo "<td>".$data['id_order']."</td>";
+                        echo "<td>".$data['id_order_container']."</td>";
+                        echo "<td>".$data['tanggal_order']."</td>";
+                        echo "<td>".$data['nama_driver']."</td>";
+                        echo "<td>".$data['telp_driver']."</td>";
+                        echo "<td><a href='uploads/".$data['shipment_instruction']."' target='_blank'>".$data['shipment_instruction']."</a></td>";
+                        echo "<td><a href='uploads/".$data['packing_list']."' target='_blank'>".$data['packing_list']."</a></td>";                        
+                        echo "<td><span class='badge badge-danger'>Process</span></td>";
                         echo "<td>";
+                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['no_persyaratan']."\", \"".$data['id_order']."\", \"".$data['id_order_container']."\", \"".$data['nama_driver']."\", \"".$data['telp_driver']."\", \"".$data['shipment_instruction']."\", \"".$data['packing_list']."\")'><i class='fas fa-edit'></i></button>";
+                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['no_persyaratan']."\")'><i class='fas fa-trash'></i></button>";
+                        echo "<button type='button' class='btn btn-info btn-sm' style='width: 30px; height: 30px;' onclick='approveData(\"".$data['no_persyaratan']."\")'><i class='fas fa-check'></i></button>";
+                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='rejectData(\"".$data['no_persyaratan']."\")'><i class='fas fa-times'></i></button>"; 
                         echo "</td>";
                         echo "</tr>"; 
                     }
@@ -502,6 +710,37 @@ if (!$result_select_logs) {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+  <script>
+    function openEditModal(noPersyaratan, idOrder, idOrderContainer, TanggalOrder, namaDriver, telpDriver, shipmentInstruction, packingList) {
+        document.getElementById("edit_no_persyaratan").value = noPersyaratan;
+        document.getElementById("edit_id_order").value = idOrder;
+        document.getElementById("edit_id_order_container").value = idOrderContainer;
+        document.getElementById("edit_tanggal_order").value = TanggalOrder;
+        document.getElementById("edit_nama_driver").value = namaDriver;
+        document.getElementById("edit_telp_driver").value = telpDriver;
+        document.getElementById("edit_shipment_instruction").value = shipmentInstruction;
+        document.getElementById("edit_packing_list").value = packingList;
+    }
+
+    function openDeleteModal(noPersyaratan) {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+            keyboard: false
+        });
+        deleteModal.show();
+        
+        // Tambahkan event listener pada tombol konfirmasi hapus
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            window.location.href = "?no_persyaratan=" + noPersyaratan;
+        };
+    }
+    // Function to display selected file name
+    function displayFileName(input, targetId) {
+      var fileName = input.files[0].name;
+      document.getElementById(targetId).innerHTML = fileName;
+    }
+  </script>
+  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>

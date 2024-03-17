@@ -14,14 +14,21 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['posisi']) && isset($_POST['email']) && isset($_POST['password'])) {
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $posisi = $_POST['posisi'];
-  $email = $_POST['email'];
-  $password = $_POST['password'];
+if (isset($_POST['id_persediaan']) && isset($_POST['nama_persediaan']) && isset($_POST['tanggal_input']) && isset($_POST['harga_masuk']) && isset($_POST['jumlah_masuk']) && isset($_POST['total_masuk']) && isset($_POST['harga_keluar']) && isset($_POST['jumlah_keluar']) && isset($_POST['total_keluar']) && isset($_POST['harga_saldo']) && isset($_POST['jumlah_saldo']) && isset($_POST['total_saldo'])) {
+  $idPersediaan = $_POST['id_persediaan'];
+  $namaPersediaan = $_POST['nama_persediaan'];
+  $tanggalInput = $_POST['tanggal_input'];
+  $hargaMasuk = $_POST['harga_masuk'];
+  $jumlahMasuk = $_POST['jumlah_masuk'];
+  $totalMasuk = $_POST['total_masuk'];
+  $hargaKeluar = $_POST['harga_keluar'];
+  $jumlahKeluar = $_POST['jumlah_keluar'];
+  $totalKeluar = $_POST['total_keluar'];
+  $hargaSaldo = $_POST['harga_saldo'];
+  $jumlahSaldo = $_POST['jumlah_saldo'];
+  $totalSaldo = $_POST['total_saldo'];
 
-  $query = "INSERT INTO data_user (username, nama_lengkap, posisi, email, password) VALUES ('$username', '$namaLengkap', '$posisi', '$email', '$password')";
+  $query = "INSERT INTO kartu_persediaan (id_persediaan, nama_persediaan, tanggal_input, harga_masuk, jumlah_masuk, total_masuk, harga_keluar, jumlah_keluar, total_keluar, harga_saldo, jumlah_saldo, total_saldo) VALUES ('$idPersediaan', '$namaPersediaan', '$tanggalInput', '$hargaMasuk', '$jumlahMasuk', '$totalMasuk', '$hargaKeluar', '$jumlahKeluar', '$totalKeluar', '$hargaSaldo', '$jumlahSaldo', '$totalSaldo')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +38,21 @@ if (isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_posisi']) && isset($_POST['edit_email']) && isset($_POST['edit_password'])) {
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $posisi = $_POST['edit_posisi'];
-  $email = $_POST['edit_email'];
-  $password = $_POST['edit_password'];
+if (isset($_POST['edit_id_persediaan']) && isset($_POST['edit_nama_persediaan']) && isset($_POST['edit_tanggal_input']) && isset($_POST['edit_harga_masuk']) && isset($_POST['edit_jumlah_masuk']) && isset($_POST['edit_total_masuk']) && isset($_POST['edit_harga_keluar']) && isset($_POST['edit_jumlah_keluar']) && isset($_POST['edit_total_keluar']) && isset($_POST['edit_harga_saldo']) && isset($_POST['edit_jumlah_saldo']) && isset($_POST['edit_total_saldo'])) {
+  $idPersediaan = $_POST['edit_id_persediaan'];
+  $namaPersediaan = $_POST['edit_nama_persediaan'];
+  $tanggalInput = $_POST['edit_tanggal_input'];
+  $hargaMasuk = $_POST['edit_harga_masuk'];
+  $jumlahMasuk = $_POST['edit_jumlah_masuk'];
+  $totalMasuk = $_POST['edit_total_masuk'];
+  $hargaKeluar = $_POST['edit_harga_keluar'];
+  $jumlahKeluar = $_POST['edit_jumlah_keluar'];
+  $totalKeluar = $_POST['edit_total_keluar'];
+  $hargaSaldo = $_POST['edit_harga_saldo'];
+  $jumlahSaldo = $_POST['edit_jumlah_saldo'];
+  $totalSaldo = $_POST['edit_total_saldo'];
 
-  $query = "UPDATE data_user SET nama_lengkap='$namaLengkap', posisi='$posisi', email='$email', password='$password' WHERE username='$username'";
+  $query = "UPDATE kartu_persediaan SET nama_persediaan='$namaPersediaan', tanggal_input='$tanggalInput', harga_masuk='$hargaMasuk', jumlah_masuk='$jumlahMasuk', total_masuk='$totalMasuk', harga_keluar='$hargaKeluar', jumlah_keluar='$jumlahKeluar', total_keluar='$totalKeluar', harga_saldo='$hargaSaldo', jumlah_saldo='$jumlahSaldo', total_saldo='$totalSaldo' WHERE id_persediaan='$idPersediaan'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,10 +62,10 @@ if (isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isse
 }
 
 // Menangani penghapusan data
-if (isset($_GET['username'])) {
-  $username = $_GET['username'];
+if (isset($_GET['id_persediaan'])) {
+  $idPersediaan = $_GET['id_persediaan'];
 
-  $query = "DELETE FROM data_user WHERE username='$username'";
+  $query = "DELETE FROM kartu_persediaan WHERE id_persediaan='$idPersediaan'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -60,14 +74,14 @@ if (isset($_GET['username'])) {
   }
 }
 
-// Mengambil data dari tabel data_hpp_feet
-$query_select = "SELECT * FROM data_user";
+// Mengambil data dari tabel kartu_persediaan
+$query_select = "SELECT * FROM kartu_persediaan";
 $result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
 if (!$result_select) {
-  echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
-  exit();
+    echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
+    exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
@@ -82,7 +96,7 @@ if (!$result_select) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Kartu Persediaan</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
@@ -117,11 +131,11 @@ if (!$result_select) {
           <!-- Konten dropdown Master -->
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Master</h6>
-            <a class="collapse-item" href="ms-standar-hpp.php">Standar HPP</a>
-            <a class="collapse-item" href="ms-harga-jasa.php">Harga Jasa</a>
-            <a class="collapse-item" href="ms-persediaan.php">Persediaan</a>
-            <a class="collapse-item" href="ms-importer.php">Importer</a>
-            <a class="collapse-item" href="ms-pegawai.php">Pegawai</a>
+            <a class="collapse-item" href="standar-hpp.php">Standar HPP</a>
+            <a class="collapse-item" href="harga-jasa.php">Harga Jasa</a>
+            <a class="collapse-item" href="persediaan.php">Persediaan</a>
+            <a class="collapse-item" href="importer.php">Importer</a>
+            <a class="collapse-item" href="pegawai.php">Pegawai</a>
           </div>
         </div>
       </li>
@@ -135,14 +149,14 @@ if (!$result_select) {
           <!-- Konten dropdown Penerimaan Jasa -->
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Penerimaan Jasa</h6>
-            <a class="collapse-item" href="pj-customer.php">Customer</a>
-            <a class="collapse-item" href="pj-order.php">Order</a>
-            <a class="collapse-item" href="pj-dokumen-order.php">Dokumen Order</a>
-            <a class="collapse-item" href="pj-sertifikat.php">Sertifikat</a>
-            <a class="collapse-item" href="pj-invoice.php">Invoice</a>
-            <a class="collapse-item" href="pj-bukti-pembayaran.php">Bukti Pembayaran</a>
-            <a class="collapse-item" href="pj-detail-customer.php">Detail Customer</a>
-            <a class="collapse-item" href="pj-rekap-penjualan.php">Rekap Penjualan</a>
+            <a class="collapse-item" href="customer.php">Customer</a>
+            <a class="collapse-item" href="order.php">Order</a>
+            <a class="collapse-item" href="dokumen-order.php">Dokumen Order</a>
+            <a class="collapse-item" href="sertifikat.php">Sertifikat</a>
+            <a class="collapse-item" href="invoice.php">Invoice</a>
+            <a class="collapse-item" href="bukti-pembayaran.php">Bukti Pembayaran</a>
+            <a class="collapse-item" href="detail-customer.php">Detail Customer</a>
+            <a class="collapse-item" href="rekap-penjualan.php">Rekap Penjualan</a>
           </div>
         </div>
       </li>
@@ -156,16 +170,16 @@ if (!$result_select) {
           <!-- Konten dropdown Operasional -->
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Operasional</h6>
-            <a class="collapse-item" href="opr-verifikasi-order.php">Verifikasi Order</a>
-            <a class="collapse-item" href="opr-surat-perintah.php">Surat Perintah Kerja</a>
-            <a class="collapse-item" href="opr-surat-pemberitahuan.php">Surat Pemberitahuan</a>
-            <a class="collapse-item" href="opr-ceklist-fumigasi.php">Ceklist Fumigasi</a>
-            <a class="collapse-item" href="opr-methyl-recordsheet.php">Methyl Recordsheet</a>
-            <a class="collapse-item" href="opr-pemakaian-methyl.php">Pemakaian Methyl</a>
-            <a class="collapse-item" href="opr-kartu-persediaan.php">Kartu Persediaan</a>
-            <a class="collapse-item" href="opr-pemberitahuan-kegiatan.php">Pemberitahuan Kegiatan</a>
-            <a class="collapse-item" href="opr-draft-pelayaran.php">Draft Pelayaran</a>
-            <a class="collapse-item" href="opr-hpp-sesungguhnya.php">HPP Sesunggguhnya</a>
+            <a class="collapse-item" href="verifikasi-order.php">Verifikasi Order</a>
+            <a class="collapse-item" href="surat-perintah.php">Surat Perintah Kerja</a>
+            <a class="collapse-item" href="surat-pemberitahuan.php">Surat Pemberitahuan</a>
+            <a class="collapse-item" href="ceklist-fumigasi.php">Ceklist Fumigasi</a>
+            <a class="collapse-item" href="methyl-recordsheet.php">Methyl Recordsheet</a>
+            <a class="collapse-item" href="pemakaian-methyl.php">Pemakaian Methyl</a>
+            <a class="collapse-item" href="kartu-stok.php">Kartu Stok Persediaan</a>
+            <a class="collapse-item" href="pemberitahuan-kegiatan.php">Pemberitahuan Kegiatan</a>
+            <a class="collapse-item" href="draft-pelayaran.php">Draft Pelayaran</a>
+            <a class="collapse-item" href="hpp-sesungguhnya.php">HPP Sesunggguhnya</a>
           </div>
         </div>
       </li>
@@ -179,14 +193,13 @@ if (!$result_select) {
           <!-- Konten dropdown Akuntansi -->
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Akuntansi</h6>
-            <a class="collapse-item" href="ak-akun.php">Akun</a>
-            <a class="collapse-item" href="ak-supplier.php">Supplier</a>
-            <a class="collapse-item" href="ak-detail-supplier.php">Detail Supplier</a>
-            <a class="collapse-item" href="ak-penggajian.php">Penggajian</a>
-            <a class="collapse-item" href="ak-aset-tetap.php">Aset Tetap</a>
-            <a class="collapse-item" href="ak-penyusutan-aset.php">Penyusutan Aset Tetap</a>
-            <a class="collapse-item" href="ak-rekap-hpp.php">Rekap HPP Standar</a>
-            <a class="collapse-item" href="ak-jurnal-umum.php">Jurnal Umum</a>
+            <a class="collapse-item" href="akun.php">Akun</a>
+            <a class="collapse-item" href="supplier.php">Supplier</a>
+            <a class="collapse-item" href="penggajian.php">Penggajian</a>
+            <a class="collapse-item" href="aset-tetap.php">Aset Tetap</a>
+            <a class="collapse-item" href="penyusutan-aset.php">Penyusutan Aset Tetap</a>
+            <a class="collapse-item" href="rekap-hpp.php">Rekap HPP Standar</a>
+            <a class="collapse-item" href="jurnal-umum.php">Jurnal Umum</a>
           </div>
         </div>
       </li>
@@ -200,11 +213,11 @@ if (!$result_select) {
           <!-- Konten dropdown Laporan Keuangan -->
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Laporan Keuangan</h6>
-            <a class="collapse-item" href="lk-buku-besar.php">Buku Besar</a>
-            <a class="collapse-item" href="lk-neraca-saldo.php">Neraca Saldo</a>
-            <a class="collapse-item" href="lk-laporan-hpp.php">Harga Pokok Penjualan</a>
-            <a class="collapse-item" href="lk-laporan-lr.php">Laba Rugi</a>
-            <a class="collapse-item" href="lk-laporan-neraca.php">Posisi Keuangan</a>
+            <a class="collapse-item" href="buku-besar.php">Buku Besar</a>
+            <a class="collapse-item" href="neraca-saldo.php">Neraca Saldo</a>
+            <a class="collapse-item" href="laporan-hpp.php">Harga Pokok Penjualan</a>
+            <a class="collapse-item" href="laporan-lr.php">Laba Rugi</a>
+            <a class="collapse-item" href="laporan-neraca.php">Posisi Keuangan</a>
           </div>
         </div>
       </li>
@@ -222,9 +235,9 @@ if (!$result_select) {
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#logoutModal">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
+        <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
         </a>
       </li>
     </ul>
@@ -350,9 +363,14 @@ if (!$result_select) {
                 <span class="ml-2 d-none d-lg-inline text-white small">Aida Ika Nadia</span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="profile.html">
+                <a class="dropdown-item" href="#">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
                 </a>
               </div>
             </li>
@@ -363,52 +381,71 @@ if (!$result_select) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Users</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Kartu Persediaan</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Users</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Operasional</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Kartu Persediaan</li> <!-- EDIT NAMA -->
             </ol>
           </div>
+
           <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
           <!-- Modal Tambah Data -->
           <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Tambah Data User</h5>
+                        <h5 class="modal-title" id="addModalLabel">Tambah Data Persediaan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form method="POST">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
+                                <label for="id_persediaan" class="form-label">ID Persediaan:</label>
+                                <input type="text" class="form-control" id="id_persediaan" name="id_persediaan" required>
                             </div>
                             <div class="mb-3">
-                                <label for="nama_lengkap" class="form-label">Nama Lengkap:</label>
-                                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
+                                <label for="nama_persediaan" class="form-label">Nama Persediaan:</label>
+                                <input type="text" class="form-control" id="nama_persediaan" name="nama_persediaan" required>
                             </div>
                             <div class="mb-3">
-                                  <label for="posisi" class="form-label">Posisi:</label>
-                                  <br>
-                                  <select class="form-select" id="posisi" name="posisi" required>
-                                    <option value="">Pilih Posisi</option>
-                                    <option value="Direktur">Direktur</option>
-                                    <option value="Manajer">Manajer</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Operasional">Operasional</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Fumigator">Fumigator</option>
-                                    <option value="Staff Lainnya">Staff Lainnya</option>
-                                  </select>
+                                <label for="tanggal_input" class="form-label">Tanggal Input:</label>
+                                <input type="date" class="form-control" id="tanggal_input" name="tanggal_input" required>
                             </div>
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <label for="harga_masuk" class="form-label">Harga Masuk:</label>
+                                <input type="number" class="form-control" id="harga_masuk" name="harga_masuk">
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                                <label for="jumlah_masuk" class="form-label">Jumlah Masuk:</label>
+                                <input type="number" class="form-control" id="jumlah_masuk" name="jumlah_masuk">
+                            </div>
+                            <div class="mb-3">
+                                <label for="total_masuk" class="form-label">Total Masuk:</label>
+                                <input type="number" class="form-control" id="total_masuk" name="total_masuk">
+                            </div>
+                            <div class="mb-3">
+                                <label for="harga_keluar" class="form-label">Harga Keluar:</label>
+                                <input type="number" class="form-control" id="harga_keluar" name="harga_keluar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="jumlah_keluar" class="form-label">Jumlah Keluar:</label>
+                                <input type="number" class="form-control" id="jumlah_keluar" name="jumlah_keluar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="total_keluar" class="form-label">Total Keluar:</label>
+                                <input type="number" class="form-control" id="total_keluar" name="total_keluar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="harga_saldo" class="form-label">Harga Saldo:</label>
+                                <input type="number" class="form-control" id="harga_saldo" name="harga_saldo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="jumlah_saldo" class="form-label">Jumlah Saldo:</label>
+                                <input type="number" class="form-control" id="jumlah_saldo" name="jumlah_saldo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="total_saldo" class="form-label">Total Saldo:</label>
+                                <input type="number" class="form-control" id="total_saldo" name="total_saldo">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -424,40 +461,58 @@ if (!$result_select) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Data User</h5>
+                        <h5 class="modal-title" id="editModalLabel">Edit Data Persediaan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form method="POST">
                             <div class="mb-3">
-                                <label for="edit_username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="edit_username" name="edit_username" readonly required>
+                                <label for="edit_id_persediaan" class="form-label">ID Persediaan:</label>
+                                <input type="text" class="form-control" id="edit_id_persediaan" name="edit_id_persediaan" readonly required>
                             </div>
                             <div class="mb-3">
-                                <label for="edit_nama_lengkap" class="form-label">Nama Lengkap:</label>
-                                <input type="text" class="form-control" id="edit_nama_lengkap" name="edit_nama_lengkap" required>
+                                <label for="edit_nama_persediaan" class="form-label">Nama Persediaan:</label>
+                                <input type="text" class="form-control" id="edit_nama_persediaan" name="edit_nama_persediaan" required>
                             </div>
                             <div class="mb-3">
-                                  <label for="edit_posisi" class="form-label">Posisi:</label>
-                                  <br>
-                                  <select class="form-select" id="edit_posisi" name="edit_posisi" required>
-                                    <option value="">Pilih Posisi</option>
-                                    <option value="Direktur">Direktur</option>
-                                    <option value="Manajer">Manajer</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Operasional">Operasional</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Fumigator">Fumigator</option>
-                                    <option value="Staff Lainnya">Staff Lainnya</option>
-                                  </select>
+                                <label for="edit_tanggal_input" class="form-label">Tanggal Input:</label>
+                                <input type="date" class="form-control" id="edit_tanggal_input" name="edit_tanggal_input" required>
                             </div>
                             <div class="mb-3">
-                                <label for="edit_email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="edit_email" name="edit_email" required>
+                                <label for="edit_harga_masuk" class="form-label">Harga Masuk:</label>
+                                <input type="number" class="form-control" id="edit_harga_masuk" name="edit_harga_masuk">
                             </div>
                             <div class="mb-3">
-                                <label for="edit_password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="edit_password" name="edit_password" required>
+                                <label for="edit_jumlah_masuk" class="form-label">Jumlah Masuk:</label>
+                                <input type="number" class="form-control" id="edit_jumlah_masuk" name="edit_jumlah_masuk">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_total_masuk" class="form-label">Total Masuk:</label>
+                                <input type="number" class="form-control" id="edit_total_masuk" name="edit_total_masuk">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_harga_keluar" class="form-label">Harga Keluar:</label>
+                                <input type="number" class="form-control" id="edit_harga_keluar" name="edit_harga_keluar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_jumlah_keluar" class="form-label">Jumlah Keluar:</label>
+                                <input type="number" class="form-control" id="edit_jumlah_keluar" name="edit_jumlah_keluar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_total_keluar" class="form-label">Total Keluar:</label>
+                                <input type="number" class="form-control" id="edit_total_keluar" name="edit_total_keluar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_harga_saldo" class="form-label">Harga Saldo:</label>
+                                <input type="number" class="form-control" id="edit_harga_saldo" name="edit_harga_saldo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_jumlah_saldo" class="form-label">Jumlah Saldo:</label>
+                                <input type="number" class="form-control" id="edit_jumlah_saldo" name="edit_jumlah_saldo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_total_saldo" class="form-label">Total Saldo:</label>
+                                <input type="number" class="form-control" id="edit_total_saldo" name="edit_total_saldo">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -468,44 +523,6 @@ if (!$result_select) {
                 </div>
             </div>
           </div>
-          <!-- Modal Hapus -->
-          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
-                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                          </button>
-                      </div>
-                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
-                      <div class="modal-footer">
-                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!-- Modal Konfirmasi Logout -->
-          <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                          </button>
-                      </div>
-                      <div class="modal-body">
-                          Apakah Anda Yakin Ingin Keluar dari Sistem?
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                          <a href="login.html" class="btn btn-primary">Logout</a>
-                      </div>
-                  </div>
-              </div>
-          </div>
           <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
@@ -514,24 +531,37 @@ if (!$result_select) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Kartu Persediaan</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                     <!-- Tombol Tambah dengan Icon -->
-                    <div>
-                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
-                        Tambah
+                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#addModal">
+                      Tambah
+                    </button>
+                    <!-- Tombol Filter Tanggal dengan Icon -->
+                    <div class="input-group">
+                      <input type="date" class="form-control-sm border-0" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
+                      <input type="date" class="form-control-sm border-0" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="filterTanggal()">
+                        Filter
                       </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
-                    <div>
-                      <button type="button" class="btn btn-sm btn-warning" style='width: 60px; height: 30px;' onclick="cetakTabel()">
-                        Cetak
-                      </button>
-                    </div>
+                    <button type="button" class="btn btn-sm btn-warning" onclick="cetakTabel()">
+                      Cetak
+                    </button>
                   </div>
 
-                    <!-- Skrip JavaScript Cetak Tabel -->
+                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
                     <script>
+                    function filterTanggal() {
+                        var tanggalMulai = document.getElementById("tanggalMulai").value;
+                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
+                        
+                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
+                        // Anda dapat menambahkan logika Anda di sini
+                        console.log("Tanggal Mulai:", tanggalMulai);
+                        console.log("Tanggal Akhir:", tanggalAkhir);
+                    }
 
                     function cetakTabel() {
                         // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
@@ -547,34 +577,54 @@ if (!$result_select) {
                 <table class="table align-items-center table-flush table-hover" id="dataTableHover">
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
-                      <tr>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Posisi</th>
-                      <th>Email</th>
-                      <th>Password</th>
-                      <th>Aksi</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user";
-                    $result = mysqli_query($conn, $query);
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['email']."</td>";
-                        echo "<td>".$data['password']."</td>";
-                        echo "<td>";
-                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['username']."\", \"".$data['nama_lengkap']."\", \"".$data['posisi']."\", \"".$data['email']."\", \"".$data['password']."\")'><i class='fas fa-edit'></i></button>";
-                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['username']."\")'><i class='fas fa-trash'></i></button>";
-                        echo "</td>";
-                        echo "</tr>"; 
-                    }
-                    ?>
-                  </tbody>
+    <tr>
+        <th rowspan="2">ID Persediaan</th>
+        <th rowspan="2">Nama Persediaan</th>
+        <th colspan="3">Masuk</th>
+        <th colspan="3">Keluar</th>
+        <th colspan="3">Saldo</th>
+        <th rowspan="2">Aksi</th>
+    </tr>
+    <tr>
+        <th>Harga</th>
+        <th>Jumlah</th>
+        <th>Total</th>
+        <th>Harga</th>
+        <th>Jumlah</th>
+        <th>Total</th>
+        <th>Harga</th>
+        <th>Jumlah</th>
+        <th>Total</th>
+    </tr>
+</thead>
+<tbody>
+<?php
+$query = "SELECT * FROM kartu_persediaan";
+$result = mysqli_query($conn, $query);
+while ($data = mysqli_fetch_assoc($result)) {
+    echo "<tr>";
+    echo "<td rowspan='2'>".$data['id_persediaan']."</td>";
+    echo "<td rowspan='2'>".$data['nama_persediaan']."</td>";
+    echo "<td>".$data['harga_masuk']."</td>";
+    echo "<td>".$data['jumlah_masuk']."</td>";
+    echo "<td>".$data['total_masuk']."</td>";
+    echo "<td>".$data['harga_keluar']."</td>";
+    echo "<td>".$data['jumlah_keluar']."</td>";
+    echo "<td>".$data['total_keluar']."</td>";
+    echo "<td>".$data['harga_saldo']."</td>";
+    echo "<td>".$data['jumlah_saldo']."</td>";
+    echo "<td>".$data['total_saldo']."</td>";
+    echo "<td>";
+    echo "<button type='button' class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['id_persediaan']."\", \"".$data['nama_persediaan']."\", \"".$data['tanggal_input']."\", \"".$data['harga_masuk']."\", \"".$data['jumlah_masuk']."\", \"".$data['total_masuk']."\", \"".$data['harga_keluar']."\", \"".$data['jumlah_keluar']."\", \"".$data['total_keluar']."\", \"".$data['harga_saldo']."\", \"".$data['jumlah_saldo']."\", \"".$data['total_saldo']."\")'><i class='fas fa-edit'></i></button>";
+    echo "<button type='button' class='btn btn-danger btn-sm' onclick='deleteData(\"".$data['id_persediaan']."\")'><i class='fas fa-trash'></i></button>";
+    echo "</td>";
+    echo "</tr>"; 
+    echo "<tr>";
+    echo "</tr>"; 
+}
+?>
+</tbody>
+
                   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
                 </table>
               </div>
@@ -612,24 +662,25 @@ if (!$result_select) {
   </a>
   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
   <script>
-    function openEditModal(username, namaLengkap, posisi, email) {
-      document.getElementById("edit_username").value = username;
-      document.getElementById("edit_nama_lengkap").value = namaLengkap;
-      document.getElementById("edit_posisi").value = posisi;
-      document.getElementById("edit_email").value = email;
-      document.getElementById("edit_password").value = password;
+    function openEditModal(idPersediaan, namaPersediaan, tanggalInput, hargaMasuk, jumlahMasuk, totalMasuk, hargaKeluar, jumlahKeluar, totalKeluar, hargaSaldo, jumlahSaldo, totalSaldo) {
+        document.getElementById("edit_id_persediaan").value = idPersediaan;
+        document.getElementById("edit_nama_persediaan").value = namaPersediaan;
+        document.getElementById("edit_tanggal_input").value = tanggalInput;
+        document.getElementById("edit_harga_masuk").value = hargaMasuk;
+        document.getElementById("edit_jumlah_masuk").value = jumlahMasuk;
+        document.getElementById("edit_total_masuk").value = totalMasuk;
+        document.getElementById("edit_harga_keluar").value = hargaKeluar;
+        document.getElementById("edit_jumlah_keluar").value = jumlahKeluar;
+        document.getElementById("edit_total_keluar").value = totalKeluar;
+        document.getElementById("edit_harga_saldo").value = hargaSaldo;
+        document.getElementById("edit_jumlah_saldo").value = jumlahSaldo;
+        document.getElementById("edit_total_saldo").value = totalSaldo;
     }
 
-    function openDeleteModal(username) {
-        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-            keyboard: false
-        });
-        deleteModal.show();
-        
-        // Tambahkan event listener pada tombol konfirmasi hapus
-        document.getElementById('confirmDeleteBtn').onclick = function() {
-            window.location.href = "?username=" + username;
-        };
+    function deleteData(idKartuPersediaan) {
+        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+            window.location.href = "?id_persediaan=" + idPersediaan;
+        }
     }
   </script>
   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
@@ -640,6 +691,7 @@ if (!$result_select) {
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/simitra.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
   <!-- Page level plugins -->
   <script src="vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>

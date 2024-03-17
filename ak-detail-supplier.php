@@ -14,14 +14,17 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (isset($_POST['id_detail_supplier']) & isset($_POST['id_supplier']) && isset($_POST['nama_supplier']) && isset($_POST['termin_pembayaran']) && isset($_POST['tanggal_input']) && isset($_POST['pembelian']) && isset($_POST['pembayaran']) && isset($_POST['saldo_akhir_supplier'])) {
+  $idDetailSupplier = $_POST['id_detail_supplier'];
+  $idSupplier = $_POST['id_supplier'];
+  $namaSupplier = $_POST['nama_supplier'];
+  $terminPembayaran = $_POST['termin_pembayaran'];
+  $tanggalInput = $_POST['tanggal_input'];
+  $pembelian = $_POST['pembelian'];
+  $pembayaran = $_POST['pembayaran'];
+  $saldoAkhirSupplier = $_POST['saldo_akhir_supplier'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
+  $query = "INSERT INTO keu_detail_supplier (id_detail_supplier, id_supplier, nama_supplier, termin_pembayaran, tanggal_input, pembelian, pembayaran, saldo_akhir_supplier) VALUES ('$idDetailSupplier', '$idSupplier', '$namaSupplier', '$terminPembayaran', '$tanggalInput', '$pembelian', '$pembayaran', '$saldoAkhirSupplier')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +34,17 @@ if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['u
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_id_detail_supplier']) && isset($_POST['edit_id_supplier']) && isset($_POST['edit_nama_supplier']) && isset($_POST['edit_termin_pembayaran']) && isset($_POST['edit_tanggal_input']) && isset($_POST['edit_pembelian']) && isset($_POST['edit_pembayaran']) && isset($_POST['edit_saldo_akhir_supplier'])) {
+  $idDetailSupplier = $_POST['edit_id_detail_supplier'];
+  $idSupplier = $_POST['edit_id_supplier'];
+  $namaSupplier = $_POST['edit_nama_supplier'];
+  $terminPembayaran = $_POST['edit_termin_pembayaran'];
+  $tanggalInput = $_POST['edit_tanggal_input'];
+  $pembelian = $_POST['edit_pembelian'];
+  $pembayaran = $_POST['edit_pembayaran'];
+  $saldoAkhirSupplier = $_POST['edit_saldo_akhir_supplier'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
+  $query = "UPDATE keu_detail_supplier SET id_supplier='$idSupplier', nama_supplier='$namaSupplier', termin_pembayaran='$terminPembayaran', tanggal_input='$tanggalInput', pembelian='$pembelian', pembayaran='$pembayaran', saldo_akhir_supplier='$saldoAkhirSupplier' WHERE id_detail_supplier='$idDetailSupplier'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,13 +54,10 @@ if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['id_detail_supplier'])) {
+  $idDetailSupplier = $_GET['id_detail_supplier'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
+  $query = "DELETE FROM keu_detail_supplier WHERE id_detail_supplier='$idDetailSupplier'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -63,16 +66,27 @@ if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['user
   }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel keu_detail_supplier
+$query_select = "SELECT * FROM keu_detail_supplier";
+$result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
-  exit();
+if (!$result_select) {
+    echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
+    exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
+// Query untuk mengambil data id supplier
+$sql = "SELECT id_supplier FROM keu_supplier";
+$result = $conn->query($sql);
+
+// Mengisi dropdown dengan data id supplier
+$id_supplier_options = '';
+if ($result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    $id_supplier_options .= '<option value="' . $row['id_supplier'] . '">' . $row['id_supplier'] . '</option>';
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -85,10 +99,11 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Detail Supplier</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
@@ -365,11 +380,142 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Detail Supplier</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Akuntansi</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Detail Supplier</li> <!-- EDIT NAMA -->
             </ol>
+          </div>
+          <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+          <!-- Modal Tambah Data -->
+          <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data Detail Supplier</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="id_detail_supplier" class="form-label">ID Detail Supplier:</label>
+                                  <input type="text" class="form-control" id="id_detail_supplier" name="id_detail_supplier" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="id_supplier" class="form-label">ID Supplier:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="id_supplier" name="id_supplier" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nama_supplier" class="form-label">Nama Supplier:</label>
+                                  <input type="text" class="form-control" id="nama_supplier" name="nama_supplier" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="termin_pembayaran" class="form-label">Termin Pembayaran:</label>
+                                  <input type="text" class="form-control" id="termin_pembayaran" name="termin_pembayaran" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="tanggal_input" class="form-label">Tanggal Input:</label>
+                                  <input type="date" class="form-control" id="tanggal_input" name="tanggal_input" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="pembelian" class="form-label">Pembelian:</label>
+                                  <input type="number" class="form-control" id="pembelian" name="pembelian">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="pembayaran" class="form-label">Pembayaran:</label>
+                                  <input type="number" class="form-control" id="pembayaran" name="pembayaran">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="saldo_akhir_supplier" class="form-label">Saldo Akhir Supplier:</label>
+                                  <input type="number" class="form-control" id="saldo_akhir_supplier" name="saldo_akhir_supplier" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Edit Data -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Detail Supplier</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="edit_id_detail_supplier" class="form-label">ID Detail Supplier:</label>
+                                  <input type="text" class="form-control" id="edit_id_detail_supplier" name="edit_id_detail_supplier" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_id_supplier" class="form-label">ID Supplier:</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="edit_id_supplier" name="edit_id_supplier" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_supplier" class="form-label">Nama Supplier:</label>
+                                  <input type="text" class="form-control" id="edit_nama_supplier" name="edit_nama_supplier" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_termin_pembayaran" class="form-label">Termin Pembayaran:</label>
+                                  <input type="text" class="form-control" id="edit_termin_pembayaran" name="edit_termin_pembayaran" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_tanggal_input" class="form-label">Tanggal Input:</label>
+                                  <input type="date" class="form-control" id="edit_tanggal_input" name="edit_tanggal_input" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_pembelian" class="form-label">Pembelian:</label>
+                                  <input type="number" class="form-control" id="edit_pembelian" name="edit_pembelian">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_pembayaran" class="form-label">Pembayaran:</label>
+                                  <input type="number" class="form-control" id="edit_pembayaran" name="edit_pembayaran">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_saldo_akhir_supplier" class="form-label">Saldo Akhir Supplier:</label>
+                                  <input type="number" class="form-control" id="edit_saldo_akhir_supplier" name="edit_saldo_akhir_supplier" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
+                      <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Konfirmasi Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -391,6 +537,7 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
@@ -398,15 +545,26 @@ if (!$result_select_logs) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Detail Supplier</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <!-- Tombol Filter Tanggal dengan Icon -->
+                    <!-- Tombol Tambah dengan Icon -->
+                    <div>
+                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
+                        Tambah
+                      </button>
+                    </div>
+                    <!-- Tombol Filter Id Supplier dan Tanggal dengan Icon -->
                     <div class="input-group">
+                      <label for="id_supplier" class="mb-0 mr-2">Id Supplier:</label>
+                      <select class="form-control-sm border-1" style="width: 100px; height: 30px;" id="id_supplier" onchange="filterData()">
+                        <option value="">Supplier</option>
+                        <?php echo $id_supplier_options; ?>
+                      </select>
                       <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
                       <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
-                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
-                          Filter
-                        </button>
+                      <button type="button" class="btn btn-secondary btn-sm" style="width: 60px; height: 30px;" onclick="filterData()">
+                        Filter
+                      </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
                     <div>
@@ -442,30 +600,42 @@ if (!$result_select_logs) {
                 <table class="table align-items-center table-flush table-hover" id="dataTableHover">
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
-                      <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
-                      </tr>
+                    <tr>
+                        <th>ID Detail Supplier</th>
+                        <th>ID Supplier</th>
+                        <th>Nama Supplier</th>
+                        <th>Termin Pembayaran</th>
+                        <th>Tanggal Input</th>
+                        <th>Pembelian</th>
+                        <th>Pembayaran</th>
+                        <th>Saldo Akhir Supplier</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user_logs";
-                    $result = mysqli_query($conn, $query);
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
-                        echo "<td>";
-                        echo "</td>";
-                        echo "</tr>"; 
-                    }
-                  ?>
+                    <?php
+                      $query = "SELECT * FROM keu_detail_supplier";
+                      $result = mysqli_query($conn, $query);
+                      while ($data = mysqli_fetch_assoc($result)) {
+                          echo "<tr>";
+                          echo "<td>".$data['id_detail_supplier']."</td>";
+                          echo "<td>".$data['id_supplier']."</td>";
+                          echo "<td>".$data['nama_supplier']."</td>";
+                          echo "<td>".$data['termin_pembayaran']."</td>";
+                          echo "<td>".$data['tanggal_input']."</td>";
+                          echo "<td>".number_format($data['pembelian'], 2, ',', '.')."</td>"; 
+                          echo "<td>".number_format($data['pembayaran'], 2, ',', '.')."</td>"; 
+                          echo "<td>".number_format($data['saldo_akhir_supplier'], 2, ',', '.')."</td>";
+                          echo "<td><span class='badge badge-danger'>Jatuh Tempo</span></td>"; 
+                          echo "<td>";
+                          echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['id_detail_supplier']."\", \"".$data['id_supplier']."\", \"".$data['nama_supplier']."\", \"".$data['termin_pembayaran']."\", \"".$data['tanggal_input']."\", \"".$data['pembelian']."\", \"".$data['pembayaran']."\", \"".$data['saldo_akhir_supplier']."\")'><i class='fas fa-edit'></i></button>";
+                          echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['id_detail_supplier']."\")'><i class='fas fa-trash'></i></button>";
+                          echo "<a href='generate_pdf.php?id_detail_supplier=".htmlspecialchars($data['id_detail_supplier'])."' class='btn btn-primary btn-sm' style='width: 30px; height: 30px;' target='_blank' role='button'><i class='fas fa-print'></i></a>";
+                          echo "</td>";
+                          echo "</tr>"; 
+                      }
+                    ?>
                   </tbody>
                   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
                 </table>
@@ -502,6 +672,32 @@ if (!$result_select_logs) {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+  <script>
+    function openEditModal(idDetailSupplier, idSupplier, namaSupplier, terminPembayaran, tanggalInput, pembelian, pembayaran, saldoAkhirSupplier) {
+        document.getElementById("edit_id_detail_supplier").value = idDetailSupplier;
+        document.getElementById("edit_id_supplier").value = idSupplier;
+        document.getElementById("edit_nama_supplier").value = namaSupplier;
+        document.getElementById("edit_termin_pembayaran").value = terminPembayaran;
+        document.getElementById("edit_tanggal_input").value = tanggalInput;
+        document.getElementById("edit_pembelian").value = pembelian;
+        document.getElementById("edit_pembayaran").value = pembayaran;
+        document.getElementById("edit_saldo_akhir_supplier").value = saldoAkhirSupplier;
+    }
+
+    function openDeleteModal(idDetailSupplier) {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+            keyboard: false
+        });
+        deleteModal.show();
+        
+        // Tambahkan event listener pada tombol konfirmasi hapus
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            window.location.href = "?id_detail_supplier=" + idDetailSupplier;
+        };
+    }
+  </script>
+  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>

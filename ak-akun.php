@@ -14,14 +14,14 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (isset($_POST['kode_akun']) && isset($_POST['nama_akun']) && isset($_POST['jenis_akun']) && isset($_POST['kelompok_akun']) && isset($_POST['saldo_akun'])) {
+  $kodeAkun = $_POST['kode_akun'];
+  $namaAkun = $_POST['nama_akun'];
+  $jenisAkun = $_POST['jenis_akun'];
+  $kelompokAkun = $_POST['kelompok_akun'];
+  $saldoAkun = $_POST['saldo_akun'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
+  $query = "INSERT INTO keu_akun (kode_akun, nama_akun, jenis_akun, kelompok_akun, saldo_akun) VALUES ('$kodeAkun', '$namaAkun', '$jenisAkun', '$kelompokAkun', '$saldoAkun')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +31,14 @@ if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['u
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_kode_akun']) && isset($_POST['edit_nama_akun']) && isset($_POST['edit_jenis_akun']) && isset($_POST['edit_kelompok_akun']) && isset($_POST['edit_saldo_akun'])) {
+  $kodeAkun = $_POST['edit_kode_akun'];
+  $namaAkun = $_POST['edit_nama_akun'];
+  $jenisAkun = $_POST['edit_jenis_akun'];
+  $kelompokAkun = $_POST['edit_kelompok_akun'];
+  $saldoAkun = $_POST['edit_saldo_akun'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
+  $query = "UPDATE keu_akun SET nama_akun='$namaAkun', jenis_akun='$jenisAkun', kelompok_akun='$kelompokAkun', saldo_akun='$saldoAkun' WHERE kode_akun='$kodeAkun'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,13 +48,10 @@ if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['kode_akun'])) {
+  $kodeAkun = $_GET['kode_akun'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
+  $query = "DELETE FROM keu_akun WHERE kode_akun='$kodeAkun'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -63,14 +60,14 @@ if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['user
   }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel keu_akun
+$query_select = "SELECT * FROM keu_akun";
+$result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
-  exit();
+if (!$result_select) {
+    echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
+    exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
@@ -85,10 +82,11 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Akun</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
@@ -365,11 +363,136 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Akun</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Akuntansi</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Akun</li> <!-- EDIT NAMA -->
             </ol>
+          </div>
+          <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+          <!-- Modal Tambah Data -->
+          <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data Akun</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="kode_akun" class="form-label">Kode Akun:</label>
+                                  <input type="text" class="form-control" id="kode_akun" name="kode_akun" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nama_akun" class="form-label">Nama Akun:</label>
+                                  <input type="text" class="form-control" id="nama_akun" name="nama_akun" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="jenis_akun" class="form-label">Jenis Akun:</label>
+                                  <br>
+                                  <select class="form-select" id="jenis_akun" name="jenis_akun" required>
+                                      <option value="">Pilih Jenis Akun</option>
+                                      <option value="debet">Debet</option>
+                                      <option value="kredit">Kredit</option>
+                                  </select>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="kelompok_akun" class="form-label">Kelompok Akun:</label>
+                                  <br>
+                                  <select class="form-select" id="kelompok_akun" name="kelompok_akun" required>
+                                      <option value="">Pilih Kelompok Akun</option>
+                                      <option value="aset">Aset</option>
+                                      <option value="liabilitas">Liabilitas</option>
+                                      <option value="ekuitas">Ekuitas</option>
+                                      <option value="modal">Modal</option>
+                                      <option value="pendapatan">Pendapatan</option>
+                                      <option value="bebas">Beban</option>
+                                  </select>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="saldo_akun" class="form-label">Saldo Akun:</label>
+                                  <input type="number" class="form-control" id="saldo_akun" name="saldo_akun" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Edit Data -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Akun</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="edit_kode_akun" class="form-label">Kode Akun:</label>
+                                  <input type="text" class="form-control" id="edit_kode_akun" name="edit_kode_akun" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_akun" class="form-label">Nama Akun:</label>
+                                  <input type="text" class="form-control" id="edit_nama_akun" name="edit_nama_akun" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_jenis_akun" class="form-label">Jenis Akun:</label>
+                                  <br>
+                                  <select class="form-select" id="edit_jenis_akun" name="edit_jenis_akun" required>
+                                      <option value="">Pilih Jenis Akun</option>
+                                      <option value="debet">Debet</option>
+                                      <option value="kredit">Kredit</option>
+                                  </select>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_kelompok_akun" class="form-label">Kelompok Akun:</label>
+                                  <br>
+                                  <select class="form-select" id="edit_kelompok_akun" name="edit_kelompok_akun" required>
+                                      <option value="">Pilih Kelompok Akun</option>
+                                      <option value="aset">Aset</option>
+                                      <option value="liabilitas">Liabilitas</option>
+                                      <option value="ekuitas">Ekuitas</option>
+                                      <option value="modal">Modal</option>
+                                      <option value="pendapatan">Pendapatan</option>
+                                      <option value="beban">Beban</option>
+                                  </select>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_saldo_akun" class="form-label">Saldo Akun:</label>
+                                  <input type="number" class="form-control" id="edit_saldo_akun" name="edit_saldo_akun" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
+                      <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Konfirmasi Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -391,6 +514,7 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
@@ -398,15 +522,13 @@ if (!$result_select_logs) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Akun</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <!-- Tombol Filter Tanggal dengan Icon -->
-                    <div class="input-group">
-                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
-                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
-                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
-                          Filter
-                        </button>
+                    <!-- Tombol Tambah dengan Icon -->
+                    <div>
+                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
+                        Tambah
+                      </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
                     <div>
@@ -415,27 +537,6 @@ if (!$result_select_logs) {
                       </button>
                     </div>
                   </div>
-
-                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
-                    <script>
-                    function filterTanggal() {
-                        var tanggalMulai = document.getElementById("tanggalMulai").value;
-                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
-                        
-                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
-                        // Anda dapat menambahkan logika Anda di sini
-                        console.log("Tanggal Mulai:", tanggalMulai);
-                        console.log("Tanggal Akhir:", tanggalAkhir);
-                    }
-
-                    function cetakTabel() {
-                        // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
-                        filterTanggal(); // Memanggil fungsi filterTanggal() untuk mendapatkan rentang tanggal yang dipilih
-                        
-                        // Lakukan pencetakan sesuai dengan rentang tanggal yang dipilih
-                        window.print();
-                    }
-                    </script>
                 </div>
                 
                 <div class="table-responsive p-3">
@@ -443,25 +544,28 @@ if (!$result_select_logs) {
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
                       <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
+                          <th>Kode Akun</th>
+                          <th>Nama Akun</th>
+                          <th>Jenis Akun</th>
+                          <th>Kelompok Akun</th>
+                          <th>Saldo Akun</th>
+                          <th>Aksi</th>
                       </tr>
                   </thead>
                   <tbody>
                   <?php
-                    $query = "SELECT * FROM data_user_logs";
+                    $query = "SELECT * FROM keu_akun";
                     $result = mysqli_query($conn, $query);
                     while ($data = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
+                        echo "<td>".$data['kode_akun']."</td>";
+                        echo "<td>".$data['nama_akun']."</td>";
+                        echo "<td>".$data['jenis_akun']."</td>";
+                        echo "<td>".$data['kelompok_akun']."</td>";
+                        echo "<td>".number_format($data['saldo_akun'], 2, ',', '.')."</td>"; 
                         echo "<td>";
+                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['kode_akun']."\", \"".$data['nama_akun']."\", \"".$data['jenis_akun']."\", \"".$data['kelompok_akun']."\", \"".$data['saldo_akun']."\")'><i class='fas fa-edit'></i></button>";
+                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['kode_akun']."\")'><i class='fas fa-trash'></i></button>";
                         echo "</td>";
                         echo "</tr>"; 
                     }
@@ -502,6 +606,29 @@ if (!$result_select_logs) {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+  <script>
+    function openEditModal(kodeAkun, namaAkun, jenisAkun, kelompokAkun, saldoAkun) {
+        document.getElementById("edit_kode_akun").value = kodeAkun;
+        document.getElementById("edit_nama_akun").value = namaAkun;
+        document.getElementById("edit_jenis_akun").value = jenisAkun;
+        document.getElementById("edit_kelompok_akun").value = kelompokAkun;
+        document.getElementById("edit_saldo_akun").value = saldoAkun;
+    }
+
+    function openDeleteModal(kodeAkun) {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+            keyboard: false
+        });
+        deleteModal.show();
+        
+        // Tambahkan event listener pada tombol konfirmasi hapus
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            window.location.href = "?kode_akun=" + kodeAkun;
+        };
+    }
+  </script>
+  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>

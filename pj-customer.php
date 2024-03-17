@@ -12,66 +12,71 @@ if (!$conn) {
     die("Koneksi gagal: " . mysqli_connect_error());
 }
 
-// AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (isset($_POST['id_customer'], $_POST['nama_customer'], $_POST['alamat_customer'], $_POST['telp_customer'], $_POST['email_customer'], $_POST['attn'], $_POST['tin'], $_POST['pic'], $_POST['phone_pic'])) {
+    $idCustomer = $_POST['id_customer'];
+    $namaCustomer = $_POST['nama_customer'];
+    $alamatCustomer = $_POST['alamat_customer'];
+    $telpCustomer = $_POST['telp_customer'];
+    $emailCustomer = $_POST['email_customer'];
+    $attn = $_POST['attn'];
+    $tin = $_POST['tin'];
+    $pic = $_POST['pic'];
+    $phonePic = $_POST['phone_pic'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
-  $result = mysqli_query($conn, $query);
+    $query = "INSERT INTO data_customer (id_customer, nama_customer, alamat_customer, telp_customer, email_customer, attn, tin, pic, phone_pic) VALUES ('$idCustomer', '$namaCustomer', '$alamatCustomer', '$telpCustomer', '$emailCustomer', '$attn', '$tin', '$pic', '$phonePic')";
+    $result = mysqli_query($conn, $query);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
-      exit();
-  }
+    if (!$result) {
+        echo "Error: " . $query . "<br>" . mysqli_error($conn);
+        exit();
+    }
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_id_customer'], $_POST['edit_nama_customer'], $_POST['edit_alamat_customer'], $_POST['edit_telp_customer'], $_POST['edit_email_customer'], $_POST['edit_attn'], $_POST['edit_tin'], $_POST['edit_pic'], $_POST['edit_phone_pic'])) {
+    $idCustomer = $_POST['edit_id_customer'];
+    $namaCustomer = $_POST['edit_nama_customer'];
+    $alamatCustomer = $_POST['edit_alamat_customer'];
+    $telpCustomer = $_POST['edit_telp_customer'];
+    $emailCustomer = $_POST['edit_email_customer'];
+    $attn = $_POST['edit_attn'];
+    $tin = $_POST['edit_tin'];
+    $pic = $_POST['edit_pic'];
+    $phonePic = $_POST['edit_phone_pic'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
-  $result = mysqli_query($conn, $query);
+    $query = "UPDATE data_customer SET nama_customer='$namaCustomer', alamat_customer='$alamatCustomer', telp_customer='$telpCustomer', email_customer='$emailCustomer', attn='$attn', tin='$tin', pic='$pic', phone_pic='$phonePic' WHERE id_customer='$idCustomer'";
+    $result = mysqli_query($conn, $query);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
-      exit();
-  }
+    if (!$result) {
+        echo "Error: " . $query . "<br>" . mysqli_error($conn);
+        exit();
+    }
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['id_customer'])) {
+    $idCustomer = $_GET['id_customer'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
-  $result = mysqli_query($conn, $query);
+    $query = "DELETE FROM data_customer WHERE id_customer='$idCustomer'";
+    $result = mysqli_query($conn, $query);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
-      exit();
-  }
+    if (!$result) {
+        echo "Error: " . $query . "<br>" . mysqli_error($conn);
+        exit();
+    }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel data_customer
+$query_select = "SELECT * FROM data_customer";
+$result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
-  exit();
+if (!$result_select) {
+    echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
+    exit();
 }
+
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
 
@@ -85,7 +90,7 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Customer</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
@@ -365,11 +370,140 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Customer</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Penerimaan Jasa</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Customer</li> <!-- EDIT NAMA -->
             </ol>
+          </div>
+          <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+          <!-- Modal Tambah Data -->
+          <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data Customer</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="id_customer" class="form-label">ID Customer:</label>
+                                  <input type="text" class="form-control" id="id_customer" name="id_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nama_customer" class="form-label">Nama Customer:</label>
+                                  <input type="text" class="form-control" id="nama_customer" name="nama_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="alamat_customer" class="form-label">Alamat Customer:</label>
+                                  <input type="text" class="form-control" id="alamat_customer" name="alamat_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="telp_customer" class="form-label">Telepon Customer:</label>
+                                  <input type="text" class="form-control" id="telp_customer" name="telp_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="email_customer" class="form-label">Email Customer:</label>
+                                  <input type="email" class="form-control" id="email_customer" name="email_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="attn" class="form-label">ATTN:</label>
+                                  <input type="text" class="form-control" id="attn" name="attn" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="tin" class="form-label">TIN:</label>
+                                  <input type="text" class="form-control" id="tin" name="tin" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="pic" class="form-label">PIC:</label>
+                                  <input type="text" class="form-control" id="pic" name="pic" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="phone_pic" class="form-label">Telepon PIC:</label>
+                                  <input type="text" class="form-control" id="phone_pic" name="phone_pic" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Edit Data -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Customer</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="edit_id_customer" class="form-label">ID Customer:</label>
+                                  <input type="text" class="form-control" id="edit_id_customer" name="edit_id_customer" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_customer" class="form-label">Nama Customer:</label>
+                                  <input type="text" class="form-control" id="edit_nama_customer" name="edit_nama_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_alamat_customer" class="form-label">Alamat Customer:</label>
+                                  <input type="text" class="form-control" id="edit_alamat_customer" name="edit_alamat_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_telp_customer" class="form-label">Telepon Customer:</label>
+                                  <input type="text" class="form-control" id="edit_telp_customer" name="edit_telp_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_email_customer" class="form-label">Email Customer:</label>
+                                  <input type="email" class="form-control" id="edit_email_customer" name="edit_email_customer" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_attn" class="form-label">ATTN:</label>
+                                  <input type="text" class="form-control" id="edit_attn" name="edit_attn" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_tin" class="form-label">TIN:</label>
+                                  <input type="text" class="form-control" id="edit_tin" name="edit_tin" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_pic" class="form-label">PIC:</label>
+                                  <input type="text" class="form-control" id="edit_pic" name="edit_pic" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_phone_pic" class="form-label">Telepon PIC:</label>
+                                  <input type="text" class="form-control" id="edit_phone_pic" name="edit_phone_pic" required>
+                              </div>
+                              <div class="modal-footer">     
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
+                      <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Konfirmasi Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -391,6 +525,7 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
@@ -398,15 +533,13 @@ if (!$result_select_logs) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Customer</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <!-- Tombol Filter Tanggal dengan Icon -->
-                    <div class="input-group">
-                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
-                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
-                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
-                          Filter
-                        </button>
+                    <!-- Tombol Tambah dengan Icon -->
+                    <div>
+                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
+                        Tambah
+                      </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
                     <div>
@@ -416,18 +549,8 @@ if (!$result_select_logs) {
                     </div>
                   </div>
 
-                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
+                    <!-- Skrip JavaScript untuk Cetak Tabel -->
                     <script>
-                    function filterTanggal() {
-                        var tanggalMulai = document.getElementById("tanggalMulai").value;
-                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
-                        
-                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
-                        // Anda dapat menambahkan logika Anda di sini
-                        console.log("Tanggal Mulai:", tanggalMulai);
-                        console.log("Tanggal Akhir:", tanggalAkhir);
-                    }
-
                     function cetakTabel() {
                         // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
                         filterTanggal(); // Memanggil fungsi filterTanggal() untuk mendapatkan rentang tanggal yang dipilih
@@ -443,29 +566,40 @@ if (!$result_select_logs) {
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
                       <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
+                          <th>Id Customer</th>
+                          <th>Nama Customer</th>
+                          <th>Alamat Customer</th>
+                          <th>Telp Customer</th>
+                          <th>Email Customer</th>
+                          <th>ATTN</th>
+                          <th>TIN</th>
+                          <th>Nama PIC</th>
+                          <th>Telp PIC</th>
+                          <th>Aksi</th>
                       </tr>
                   </thead>
                   <tbody>
                   <?php
-                    $query = "SELECT * FROM data_user_logs";
+                    $query = "SELECT * FROM data_customer";
                     $result = mysqli_query($conn, $query);
                     while ($data = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
+                        echo "<td>".$data['id_customer']."</td>";
+                        echo "<td>".$data['nama_customer']."</td>";
+                        echo "<td>".$data['alamat_customer']."</td>";
+                        echo "<td>".$data['telp_customer']."</td>";
+                        echo "<td>".$data['email_customer']."</td>";
+                        echo "<td>".$data['attn']."</td>";
+                        echo "<td>".$data['tin']."</td>";
+                        echo "<td>".$data['pic']."</td>";
+                        echo "<td>".$data['phone_pic']."</td>";
                         echo "<td>";
+                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['id_customer']."\", \"".$data['nama_customer']."\", \"".$data['alamat_customer']."\", \"".$data['telp_customer']."\", \"".$data['email_customer']."\",\"".$data['attn']."\",\"".$data['tin']."\", \"".$data['pic']."\", \"".$data['phone_pic']."\")'><i class='fas fa-edit'></i></button>";
+                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['id_customer']."\")'><i class='fas fa-trash'></i></button>";
                         echo "</td>";
                         echo "</tr>"; 
                     }
-                  ?>
+                    ?>
                   </tbody>
                   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
                 </table>
@@ -502,6 +636,33 @@ if (!$result_select_logs) {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+  <script>
+    function openEditModal(idCustomer, namaCustomer, alamatCustomer, telpCustomer, emailCustomer,attn,tin, pic, phonePic) {
+        document.getElementById("edit_id_customer").value = idCustomer;
+        document.getElementById("edit_nama_customer").value = namaCustomer;
+        document.getElementById("edit_alamat_customer").value = alamatCustomer;
+        document.getElementById("edit_telp_customer").value = telpCustomer;
+        document.getElementById("edit_email_customer").value = emailCustomer;
+        document.getElementById("edit_attn").value = attn;
+        document.getElementById("edit_tin").value = tin;
+        document.getElementById("edit_pic").value = pic;
+        document.getElementById("edit_phone_pic").value = phonePic;
+    }
+
+    function openDeleteModal(idCustomer) {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+            keyboard: false
+        });
+        deleteModal.show();
+        
+        // Tambahkan event listener pada tombol konfirmasi hapus
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            window.location.href = "?id_customer=" + idCustomer;
+        };
+    }
+  </script>
+  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>

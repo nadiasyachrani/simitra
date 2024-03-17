@@ -14,14 +14,15 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (isset($_POST['id_beban_hpp']) && isset($_POST['tanggal_input']) && isset($_POST['bbb_sesungguhnya']) && isset($_POST['btk_sesungguhnya']) && isset($_POST['bop_sesungguhnya']) && isset($_POST['hpp_sesungguhnya'])) {
+  $idBebanHpp = $_POST['id_beban_hpp'];
+  $tanggalInput = $_POST['tanggal_input'];
+  $bbbSesungguhnya = $_POST['bbb_sesungguhnya'];
+  $btkSesungguhnya = $_POST['btk_sesungguhnya'];
+  $bopSesungguhnya = $_POST['bop_sesungguhnya'];
+  $hppSesungguhnya = $_POST['hpp_sesungguhnya'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
+  $query = "INSERT INTO hpp_sesungguhnya (id_beban_hpp, tanggal_input, bbb_sesungguhnya, btk_sesungguhnya, bop_sesungguhnya, hpp_sesungguhnya) VALUES ('$idBebanHpp', '$tanggalInput', '$bbbSesungguhnya', '$btkSesungguhnya', '$bopSesungguhnya', '$hppSesungguhnya')";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -31,14 +32,15 @@ if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['u
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_id_beban_hpp']) && isset($_POST['edit_tanggal_input']) && isset($_POST['edit_bbb_sesungguhnya']) && isset($_POST['edit_btk_sesungguhnya']) && isset($_POST['edit_bop_sesungguhnya']) && isset($_POST['edit_hpp_sesungguhnya'])) {
+  $idBebanHpp = $_POST['edit_id_beban_hpp'];
+  $tanggalInput = $_POST['edit_tanggal_input'];
+  $bbbSesungguhnya = $_POST['edit_bbb_sesungguhnya'];
+  $btkSesungguhnya = $_POST['edit_btk_sesungguhnya'];
+  $bopSesungguhnya = $_POST['edit_bop_sesungguhnya'];
+  $hppSesungguhnya = $_POST['edit_hpp_sesungguhnya'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
+  $query = "UPDATE hpp_sesungguhnya SET tanggal_input='$tanggalInput', bbb_sesungguhnya='$bbbSesungguhnya', btk_sesungguhnya='$btkSesungguhnya', bop_sesungguhnya='$bopSesungguhnya', hpp_sesungguhnya='$hppSesungguhnya' WHERE id_beban_hpp='$idBebanHpp'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -48,13 +50,10 @@ if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['id_beban_hpp'])) {
+  $idBebanHpp = $_GET['id_beban_hpp'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
+  $query = "DELETE FROM hpp_sesungguhnya WHERE id_beban_hpp='$idBebanHpp'";
   $result = mysqli_query($conn, $query);
 
   if (!$result) {
@@ -63,13 +62,13 @@ if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['user
   }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel hpp_sesungguhnya
+$query_select = "SELECT * FROM hpp_sesungguhnya";
+$result_select = mysqli_query($conn, $query_select);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
+if (!$result_select) {
+  echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
   exit();
 }
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
@@ -85,10 +84,11 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - HPP Sesungguhnya</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
@@ -365,11 +365,116 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">HPP Sesungguhnya</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Operasional</a></li>
+              <li class="breadcrumb-item active" aria-current="page">HPP Sesungguhnya</li> <!-- EDIT NAMA -->
             </ol>
+          </div>
+          <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+          <!-- Modal Tambah Data -->
+          <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data HPP Sesungguhnya</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="id_beban_hpp" class="form-label">ID Beban HPP:</label>
+                                  <input type="text" class="form-control" id="id_beban_hpp" name="id_beban_hpp" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="tanggal_input" class="form-label">Tanggal Input:</label>
+                                  <input type="date" class="form-control" id="tanggal_input" name="tanggal_input" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="bbb_sesungguhnya" class="form-label">BBB Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="bbb_sesungguhnya" name="bbb_sesungguhnya" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="btk_sesungguhnya" class="form-label">BTK Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="btk_sesungguhnya" name="btk_sesungguhnya" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="bop_sesungguhnya" class="form-label">BOP Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="bop_sesungguhnya" name="bop_sesungguhnya" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="hpp_sesungguhnya" class="form-label">HPP Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="hpp_sesungguhnya" name="hpp_sesungguhnya" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Edit Data -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data HPP Sesungguhnya</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <div class="mb-3">
+                                  <label for="edit_id_beban_hpp" class="form-label">ID Beban HPP:</label>
+                                  <input type="text" class="form-control" id="edit_id_beban_hpp" name="edit_id_beban_hpp" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_tanggal_input" class="form-label">Tanggal Input:</label>
+                                  <input type="date" class="form-control" id="edit_tanggal_input" name="edit_tanggal_input" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_bbb_sesungguhnya" class="form-label">BBB Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="edit_bbb_sesungguhnya" name="edit_bbb_sesungguhnya" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_btk_sesungguhnya" class="form-label">BTK Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="edit_btk_sesungguhnya" name="edit_btk_sesungguhnya" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_bop_sesungguhnya" class="form-label">BOP Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="edit_bop_sesungguhnya" name="edit_bop_sesungguhnya" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_hpp_sesungguhnya" class="form-label">HPP Sesungguhnya:</label>
+                                  <input type="number" class="form-control" id="edit_hpp_sesungguhnya" name="edit_hpp_sesungguhnya" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal Hapus -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan Data</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">Apakah Anda Yakin Ingin Menghapus Data Ini?</div>
+                      <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Konfirmasi Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -391,6 +496,7 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
@@ -398,8 +504,14 @@ if (!$result_select_logs) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">HPP Sesungguhnya</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <!-- Tombol Tambah dengan Icon -->
+                    <div>
+                      <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
+                        Tambah
+                      </button>
+                    </div>
                     <!-- Tombol Filter Tanggal dengan Icon -->
                     <div class="input-group">
                       <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
@@ -442,30 +554,35 @@ if (!$result_select_logs) {
                 <table class="table align-items-center table-flush table-hover" id="dataTableHover">
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
-                      <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
-                      </tr>
+                    <tr>
+                        <th>ID Beban HPP</th>
+                        <th>Tanggal Input</th>
+                        <th>BBB Sesungguhnya</th>
+                        <th>BTK Sesungguhnya</th>
+                        <th>BOP Sesungguhnya</th>
+                        <th>HPP Sesungguhnya</th>
+                        <th>Aksi</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user_logs";
-                    $result = mysqli_query($conn, $query);
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
-                        echo "<td>";
-                        echo "</td>";
-                        echo "</tr>"; 
-                    }
-                  ?>
+                      <?php
+                        $query = "SELECT * FROM hpp_sesungguhnya";
+                        $result = mysqli_query($conn, $query);
+                        while ($data = mysqli_fetch_assoc($result)) {
+                            echo "<tr>";
+                            echo "<td>" . $data['id_beban_hpp'] . "</td>";
+                            echo "<td>" . $data['tanggal_input'] . "</td>";
+                            echo "<td>" . number_format($data['bbb_sesungguhnya'], 2, ',', '.') . "</td>";
+                            echo "<td>" . number_format($data['btk_sesungguhnya'], 2, ',', '.') . "</td>";
+                            echo "<td>" . number_format($data['bop_sesungguhnya'], 2, ',', '.') . "</td>";
+                            echo "<td>" . number_format($data['hpp_sesungguhnya'], 2, ',', '.') . "</td>";
+                            echo "<td>";
+                            echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"" . $data['id_beban_hpp'] . "\", \"" . $data['tanggal_input'] . "\", \"" . $data['bbb_sesungguhnya'] . "\", \"" . $data['btk_sesungguhnya'] . "\", \"" . $data['bop_sesungguhnya'] . "\", \"" . $data['hpp_sesungguhnya'] . "\")'><i class='fas fa-edit'></i></button>";
+                            echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"" . $data['id_beban_hpp'] . "\")'><i class='fas fa-trash'></i></button>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                      ?>
                   </tbody>
                   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
                 </table>
@@ -502,6 +619,30 @@ if (!$result_select_logs) {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
+  <script>
+    function openEditModal(idBebanHPP, tanggalInput, bbbSesungguhnya, btkSesungguhnya, bopSesungguhnya, hppSesungguhnya) {
+        document.getElementById("edit_id_beban_hpp").value = idBebanHPP;
+        document.getElementById("edit_tanggal_input").value = tanggalInput;
+        document.getElementById("edit_bbb_sesungguhnya").value = bbbSesungguhnya;
+        document.getElementById("edit_btk_sesungguhnya").value = btkSesungguhnya;
+        document.getElementById("edit_bop_sesungguhnya").value = bopSesungguhnya;
+        document.getElementById("edit_hpp_sesungguhnya").value = hppSesungguhnya;
+    }
+
+    function openDeleteModal(idBebanHPP) {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+            keyboard: false
+        });
+        deleteModal.show();
+        
+        // Tambahkan event listener pada tombol konfirmasi hapus
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            window.location.href = "?id_beban_hpp=" + idBebanHPP;
+        };
+    }
+  </script>
+  <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>

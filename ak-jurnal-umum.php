@@ -14,61 +14,141 @@ if (!$conn) {
 
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['posisi']) && isset($_POST['email']) && isset($_POST['password'])) {
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $posisi = $_POST['posisi'];
-  $email = $_POST['email'];
-  $password = $_POST['password'];
+if (
+  isset($_POST['no_jurnal']) &&
+  isset($_POST['tanggal_jurnal']) &&
+  isset($_POST['no_bukti']) &&
+  isset($_POST['uraian_jurnal']) &&
+  isset($_POST['kode_akun_debit']) &&
+  isset($_POST['nama_akun_debit']) &&
+  isset($_POST['debet']) &&
+  isset($_POST['kode_akun_kredit']) &&
+  isset($_POST['nama_akun_kredit']) &&
+  isset($_POST['kredit'])
+) {
+  $noJurnal = $_POST['no_jurnal'];
+  $tanggalJurnal = $_POST['tanggal_jurnal'];
+  $noBukti = $_POST['no_bukti'];
+  $uraianJurnal = $_POST['uraian_jurnal'];
+  $kodeAkunDebit = $_POST['kode_akun_debit'];
+  $namaAkunDebit = $_POST['nama_akun_debit'];
+  $debet = $_POST['debet'];
+  $kodeAkunKredit = $_POST['kode_akun_kredit'];
+  $namaAkunKredit = $_POST['nama_akun_kredit'];
+  $kredit = $_POST['kredit'];
 
-  $query = "INSERT INTO data_user (username, nama_lengkap, posisi, email, password) VALUES ('$username', '$namaLengkap', '$posisi', '$email', '$password')";
-  $result = mysqli_query($conn, $query);
+  // Insert into keu_jurnal
+  $queryJurnal = "INSERT INTO keu_jurnal (no_jurnal, tanggal_jurnal, no_bukti, uraian_jurnal) VALUES ('$noJurnal', '$tanggalJurnal', '$noBukti', '$uraianJurnal')";
+  $resultJurnal = mysqli_query($conn, $queryJurnal);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
+  if (!$resultJurnal) {
+      echo "Error: " . $queryJurnal . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Insert into keu_detail_jurnal for debit
+  $queryDetailJurnalDebit = "INSERT INTO keu_detail_jurnal (no_jurnal, kode_akun, nama_akun, debet) VALUES ('$noJurnal', '$kodeAkunDebit', '$namaAkunDebit', '$debet')";
+  $resultDetailJurnalDebit = mysqli_query($conn, $queryDetailJurnalDebit);
+
+  if (!$resultDetailJurnalDebit) {
+      echo "Error: " . $queryDetailJurnalDebit . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Insert into keu_detail_jurnal for kredit
+  $queryDetailJurnalKredit = "INSERT INTO keu_detail_jurnal (no_jurnal, kode_akun, nama_akun, kredit) VALUES ('$noJurnal', '$kodeAkunKredit', '$namaAkunKredit', '$kredit')";
+  $resultDetailJurnalKredit = mysqli_query($conn, $queryDetailJurnalKredit);
+
+  if (!$resultDetailJurnalKredit) {
+      echo "Error: " . $queryDetailJurnalKredit . "<br>" . mysqli_error($conn);
       exit();
   }
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_posisi']) && isset($_POST['edit_email']) && isset($_POST['edit_password'])) {
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $posisi = $_POST['edit_posisi'];
-  $email = $_POST['edit_email'];
-  $password = $_POST['edit_password'];
+if (isset($_POST['edit_no_jurnal']) && isset($_POST['edit_tanggal_jurnal']) && isset($_POST['edit_no_bukti']) && isset($_POST['edit_uraian_jurnal']) && isset($_POST['edit_kode_akun_debit']) && isset($_POST['edit_nama_akun_debit']) && isset($_POST['edit_debet']) && isset($_POST['edit_kode_akun_kredit']) && isset($_POST['edit_nama_akun_kredit']) && isset($_POST['edit_kredit'])) {
+  $noJurnal = $_POST['edit_no_jurnal'];
+  $tanggalJurnal = $_POST['edit_tanggal_jurnal'];
+  $noBukti = $_POST['edit_no_bukti'];
+  $uraianJurnal = $_POST['edit_uraian_jurnal'];
+  $kodeAkunDebit = $_POST['edit_kode_akun_debit'];
+  $namaAkunDebit = $_POST['edit_nama_akun_debit'];
+  $debet = $_POST['edit_debet'];
+  $kodeAkunKredit = $_POST['edit_kode_akun_kredit'];
+  $namaAkunKredit = $_POST['edit_nama_akun_kredit'];
+  $kredit = $_POST['edit_kredit'];
 
-  $query = "UPDATE data_user SET nama_lengkap='$namaLengkap', posisi='$posisi', email='$email', password='$password' WHERE username='$username'";
-  $result = mysqli_query($conn, $query);
+  // Update keu_jurnal
+  $queryJurnal = "UPDATE keu_jurnal SET tanggal_jurnal='$tanggalJurnal', no_bukti='$noBukti', uraian_jurnal='$uraianJurnal' WHERE no_jurnal='$noJurnal'";
+  $resultJurnal = mysqli_query($conn, $queryJurnal);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
+  if (!$resultJurnal) {
+      echo "Error: " . $queryJurnal . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Update keu_detail_jurnal (baris pertama)
+  $queryDetailJurnalDebit = "UPDATE keu_detail_jurnal SET kode_akun='$kodeAkunDebit', nama_akun='$namaAkunDebit', debet='$debet' WHERE no_jurnal='$noJurnal'";
+  $resultDetailJurnalDebit = mysqli_query($conn, $queryDetailJurnalDebit);
+
+  if (!$resultDetailJurnalDebit) {
+      echo "Error: " . $queryDetailJurnalDebit . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Update keu_detail_jurnal (baris kedua)
+  $queryDetailJurnalKredit = "UPDATE keu_detail_jurnal SET kode_akun='$kodeAkunKredit', nama_akun='$namaAkunKredit', kredit='$kredit' WHERE no_jurnal='$noJurnal'";
+  $resultDetailJurnalKredit = mysqli_query($conn, $queryDetailJurnalKredit);
+
+  if (!$resultDetailJurnalKredit) {
+      echo "Error: " . $queryDetailJurnalKredit . "<br>" . mysqli_error($conn);
       exit();
   }
 }
 
 // Menangani penghapusan data
-if (isset($_GET['username'])) {
-  $username = $_GET['username'];
+if (isset($_GET['no_jurnal'])) {
+  $noJurnal = $_GET['no_jurnal'];
 
-  $query = "DELETE FROM data_user WHERE username='$username'";
-  $result = mysqli_query($conn, $query);
+  // Delete from keu_detail_jurnal
+  $queryDetailJurnal = "DELETE FROM keu_detail_jurnal WHERE no_jurnal='$noJurnal'";
+  $resultDetailJurnal = mysqli_query($conn, $queryDetailJurnal);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
+  if (!$resultDetailJurnal) {
+      echo "Error: " . $queryDetailJurnal . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Delete from keu_jurnal
+  $queryJurnal = "DELETE FROM keu_jurnal WHERE no_jurnal='$noJurnal'";
+  $resultJurnal = mysqli_query($conn, $queryJurnal);
+
+  if (!$resultJurnal) {
+      echo "Error: " . $queryJurnal . "<br>" . mysqli_error($conn);
       exit();
   }
 }
 
-// Mengambil data dari tabel data_hpp_feet
-$query_select = "SELECT * FROM data_user";
-$result_select = mysqli_query($conn, $query_select);
+// Mengambil data dari tabel keu_jurnal
+$query_select_jurnal = "SELECT * FROM keu_jurnal";
+$result_select_jurnal = mysqli_query($conn, $query_select_jurnal);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select) {
-  echo "Error: " . $query_select . "<br>" . mysqli_error($conn);
-  exit();
+if (!$result_select_jurnal) {
+    echo "Error: " . $query_select_jurnal . "<br>" . mysqli_error($conn);
+    exit();
 }
+
+// Mengambil data dari tabel keu_detail_jurnal
+$query_select_detail_jurnal = "SELECT * FROM keu_detail_jurnal";
+$result_select_detail_jurnal = mysqli_query($conn, $query_select_detail_jurnal);
+
+// Memeriksa apakah query berhasil dieksekusi
+if (!$result_select_detail_jurnal) {
+    echo "Error: " . $query_select_detail_jurnal . "<br>" . mysqli_error($conn);
+    exit();
+}
+
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
 
@@ -82,7 +162,7 @@ if (!$result_select) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Jurnal Umum</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
@@ -363,110 +443,156 @@ if (!$result_select) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Users</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Jurnal Umum</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Users</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Akuntansi</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Jurnal Umum</li> <!-- EDIT NAMA -->
             </ol>
           </div>
           <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
           <!-- Modal Tambah Data -->
           <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Tambah Data User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nama_lengkap" class="form-label">Nama Lengkap:</label>
-                                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
-                            </div>
-                            <div class="mb-3">
-                                  <label for="posisi" class="form-label">Posisi:</label>
-                                  <br>
-                                  <select class="form-select" id="posisi" name="posisi" required>
-                                    <option value="">Pilih Posisi</option>
-                                    <option value="Direktur">Direktur</option>
-                                    <option value="Manajer">Manajer</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Operasional">Operasional</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Fumigator">Fumigator</option>
-                                    <option value="Staff Lainnya">Staff Lainnya</option>
-                                  </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addModalLabel">Tambah Data Jurnal</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <!-- Form fields for keu_jurnal -->
+                              <div class="mb-3">
+                                  <label for="no_jurnal" class="form-label">No Jurnal:</label>
+                                  <input type="text" class="form-control" id="no_jurnal" name="no_jurnal" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="tanggal_jurnal" class="form-label">Tanggal Jurnal:</label>
+                                  <input type="date" class="form-control" id="tanggal_jurnal" name="tanggal_jurnal" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="no_bukti" class="form-label">No Bukti:</label>
+                                  <input type="text" class="form-control" id="no_bukti" name="no_bukti" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="uraian_jurnal" class="form-label">Uraian Jurnal:</label>
+                                  <input type="text" class="form-control" id="uraian_jurnal" name="uraian_jurnal" required>
+                              </div>
+                              <!-- Form fields for keu_detail_jurnal Debit -->
+                              <div class="mb-3">
+                                  <label for="kode_akun_debit" class="form-label">Kode Akun (Debit):</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="kode_akun_debit" name="kode_akun_debit" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nama_akun_debit" class="form-label">Nama Akun (Debit):</label>
+                                  <input type="text" class="form-control" id="nama_akun_debit" name="nama_akun_debit" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="debet" class="form-label">Debet:</label>
+                                  <input type="number" class="form-control" id="debet" name="debet" required>
+                              </div>
+                              <!-- Form fields for keu_detail_jurnal Kredit -->
+                              <div class="mb-3">
+                                  <label for="kode_akun_kredit" class="form-label">Kode Akun (Kredit):</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="kode_akun_kredit" name="kode_akun_kredit" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="nama_akun_kredit" class="form-label">Nama Akun (Kredit):</label>
+                                  <input type="text" class="form-control" id="nama_akun_kredit" name="nama_akun_kredit" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="kredit" class="form-label">Kredit:</label>
+                                  <input type="number" class="form-control" id="kredit" name="kredit" required>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Edit Data -->
           <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Data User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="edit_username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="edit_username" name="edit_username" readonly required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_nama_lengkap" class="form-label">Nama Lengkap:</label>
-                                <input type="text" class="form-control" id="edit_nama_lengkap" name="edit_nama_lengkap" required>
-                            </div>
-                            <div class="mb-3">
-                                  <label for="edit_posisi" class="form-label">Posisi:</label>
-                                  <br>
-                                  <select class="form-select" id="edit_posisi" name="edit_posisi" required>
-                                    <option value="">Pilih Posisi</option>
-                                    <option value="Direktur">Direktur</option>
-                                    <option value="Manajer">Manajer</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Operasional">Operasional</option>
-                                    <option value="Keuangan">Keuangan</option>
-                                    <option value="Fumigator">Fumigator</option>
-                                    <option value="Staff Lainnya">Staff Lainnya</option>
-                                  </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_email" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="edit_email" name="edit_email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="edit_password" name="edit_password" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Update</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="editModalLabel">Edit Data Jurnal</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form method="POST">
+                              <!-- Form fields for keu_jurnal -->
+                              <div class="mb-3">
+                                  <label for="edit_no_jurnal" class="form-label">No Jurnal:</label>
+                                  <input type="text" class="form-control" id="edit_no_jurnal" name="edit_no_jurnal" readonly required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_tanggal_jurnal" class="form-label">Tanggal Jurnal:</label>
+                                  <input type="date" class="form-control" id="edit_tanggal_jurnal" name="edit_tanggal_jurnal" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_no_bukti" class="form-label">No Bukti:</label>
+                                  <input type="text" class="form-control" id="edit_no_bukti" name="edit_no_bukti" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_uraian_jurnal" class="form-label">Uraian Jurnal:</label>
+                                  <input type="text" class="form-control" id="edit_uraian_jurnal" name="edit_uraian_jurnal" required>
+                              </div>
+                              <!-- Form fields for keu_detail_jurnal Debit -->
+                              <div class="mb-3">
+                                  <label for="edit_kode_akun_debit" class="form-label">Kode Akun (Debit):</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="edit_kode_akun_debit" name="edit_kode_akun_debit" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_akun_debit" class="form-label">Nama Akun (Debit):</label>
+                                  <input type="text" class="form-control" id="edit_nama_akun_debit" name="edit_nama_akun_debit">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_debet" class="form-label">Debet:</label>
+                                  <input type="number" class="form-control" id="edit_debet" name="edit_debet">
+                              </div>
+                              <!-- Form fields for keu_detail_jurnal Kredit -->
+                              <div class="mb-3">
+                                  <label for="edit_kode_akun_kredit" class="form-label">Kode Akun (Kredit):</label>
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" id="edit_kode_akun_kredit" name="edit_kode_akun_kredit" required>
+                                      <button type="button" onclick="displayDataOrder()" class="btn btn-warning" id="search_button">
+                                          <img src="https://www.freeiconspng.com/uploads/search-icon-png-0.png" alt="Search" style="width: 20px; height: 20px;">
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_nama_akun_kredit" class="form-label">Nama Akun (Kredit):</label>
+                                  <input type="text" class="form-control" id="edit_nama_akun_kredit" name="edit_nama_akun_kredit">
+                              </div>
+                              <div class="mb-3">
+                                  <label for="edit_kredit" class="form-label">Kredit:</label>
+                                  <input type="number" class="form-control" id="edit_kredit" name="edit_kredit">
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
           </div>
           <!-- Modal Hapus -->
           <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -514,13 +640,21 @@ if (!$result_select) {
             <div class="col-lg-12">
               <div class="card mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User</h6> <!-- EDIT NAMA -->
+                  <h6 class="m-0 font-weight-bold text-primary">Jurnal Umum</h6> <!-- EDIT NAMA -->
                   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                     <!-- Tombol Tambah dengan Icon -->
                     <div>
                       <button type="button" class="btn btn-sm btn-info" style='width: 70px; height: 30px;' data-bs-toggle="modal" data-bs-target="#addModal">
                         Tambah
                       </button>
+                    </div>
+                    <!-- Tombol Filter Tanggal dengan Icon -->
+                    <div class="input-group">
+                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
+                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
+                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
+                          Filter
+                        </button>
                     </div>
                     <!-- Tombol Cetak Tabel dengan Icon -->
                     <div>
@@ -530,8 +664,17 @@ if (!$result_select) {
                     </div>
                   </div>
 
-                    <!-- Skrip JavaScript Cetak Tabel -->
+                    <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
                     <script>
+                    function filterTanggal() {
+                        var tanggalMulai = document.getElementById("tanggalMulai").value;
+                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
+                        
+                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
+                        // Anda dapat menambahkan logika Anda di sini
+                        console.log("Tanggal Mulai:", tanggalMulai);
+                        console.log("Tanggal Akhir:", tanggalAkhir);
+                    }
 
                     function cetakTabel() {
                         // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
@@ -548,32 +691,40 @@ if (!$result_select) {
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
                       <tr>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Posisi</th>
-                      <th>Email</th>
-                      <th>Password</th>
-                      <th>Aksi</th>
+                          <th>No Jurnal</th>
+                          <th>Tanggal Jurnal</th>
+                          <th>No Bukti</th>
+                          <th>Uraian Jurnal</th>
+                          <th>Kode Akun</th>
+                          <th>Nama Akun</th>
+                          <th>Debet</th>
+                          <th>Kredit</th>
+                          <th>Aksi</th>
                       </tr>
                   </thead>
                   <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user";
-                    $result = mysqli_query($conn, $query);
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['email']."</td>";
-                        echo "<td>".$data['password']."</td>";
-                        echo "<td>";
-                        echo "<button type='button' class='btn btn-success btn-sm' style='width: 30px; height: 30px;' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['username']."\", \"".$data['nama_lengkap']."\", \"".$data['posisi']."\", \"".$data['email']."\", \"".$data['password']."\")'><i class='fas fa-edit'></i></button>";
-                        echo "<button type='button' class='btn btn-danger btn-sm' style='width: 30px; height: 30px;' onclick='openDeleteModal(\"".$data['username']."\")'><i class='fas fa-trash'></i></button>";
-                        echo "</td>";
-                        echo "</tr>"; 
-                    }
-                    ?>
+                      <?php
+                          $query = "SELECT keu_jurnal.no_jurnal, keu_jurnal.tanggal_jurnal, keu_jurnal.no_bukti, keu_jurnal.uraian_jurnal, keu_detail_jurnal.kode_akun, keu_detail_jurnal.nama_akun, keu_detail_jurnal.debet, keu_detail_jurnal.kredit FROM keu_jurnal INNER JOIN keu_detail_jurnal ON keu_jurnal.no_jurnal = keu_detail_jurnal.no_jurnal";
+                          $result = mysqli_query($conn, $query);
+                          while ($data = mysqli_fetch_assoc($result)) {
+                              echo "<tr>";
+                              echo "<td>".$data['no_jurnal']."</td>";
+                              echo "<td>".$data['tanggal_jurnal']."</td>";
+                              echo "<td>".$data['no_bukti']."</td>";
+                              echo "<td>".$data['uraian_jurnal']."</td>";
+                              echo "<td>".$data['kode_akun']."</td>";
+                              echo "<td>".$data['nama_akun']."</td>";
+                              echo "<td>".number_format($data['debet'], 2, ',', '.')."</td>";
+                              echo "<td>".number_format($data['kredit'], 2, ',', '.')."</td>";
+                              echo "<td>";
+                              // Adjust the buttons and links as needed for editing and deleting based on the new structure
+                              echo "<button type='button' class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#editModal' onclick='openEditModal(\"".$data['no_jurnal']."\", \"".$data['tanggal_jurnal']."\", \"".$data['no_bukti']."\", \"".$data['uraian_jurnal']."\", \"".$data['kode_akun']."\", \"".$data['nama_akun']."\", \"".$data['debet']."\", \"".$data['kredit']."\")'><i class='fas fa-edit'></i></button>";
+                              echo "<button type='button' class='btn btn-danger btn-sm' onclick='openDeleteModal(\"".$data['no_jurnal']."\")'><i class='fas fa-trash'></i></button>";
+                              echo "<a href='generate_pdf.php?no_jurnal=".htmlspecialchars($data['no_jurnal'])."' class='btn btn-primary btn-sm' target='_blank' role='button'><i class='fas fa-print'></i></a>";
+                              echo "</td>";
+                              echo "</tr>"; 
+                          }
+                      ?>
                   </tbody>
                   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
                 </table>
@@ -612,15 +763,20 @@ if (!$result_select) {
   </a>
   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
   <script>
-    function openEditModal(username, namaLengkap, posisi, email) {
-      document.getElementById("edit_username").value = username;
-      document.getElementById("edit_nama_lengkap").value = namaLengkap;
-      document.getElementById("edit_posisi").value = posisi;
-      document.getElementById("edit_email").value = email;
-      document.getElementById("edit_password").value = password;
+    function openEditModal(noJurnal, tanggalJurnal, noBukti, uraianJurnal, kodeAkunDebit, namaAkunDebit, debet, kodeAkunKredit, namaAkunKredit, kredit) {
+        document.getElementById("edit_no_jurnal").value = noJurnal;
+        document.getElementById("edit_tanggal_jurnal").value = tanggalJurnal;
+        document.getElementById("edit_no_bukti").value = noBukti;
+        document.getElementById("edit_uraian_jurnal").value = uraianJurnal;
+        document.getElementById("edit_kode_akun_debit").value = kodeAkunDebit;
+        document.getElementById("edit_nama_akun_debit").value = namaAkunDebit;
+        document.getElementById("edit_debet").value = debet;
+        document.getElementById("edit_kode_akun_kredit").value = kodeAkunKredit;
+        document.getElementById("edit_nama_akun_kredit").value = namaAkunKredit;
+        document.getElementById("edit_kredit").value = kredit;
     }
 
-    function openDeleteModal(username) {
+    function openDeleteModal(noJurnal) {
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
             keyboard: false
         });
@@ -628,7 +784,7 @@ if (!$result_select) {
         
         // Tambahkan event listener pada tombol konfirmasi hapus
         document.getElementById('confirmDeleteBtn').onclick = function() {
-            window.location.href = "?username=" + username;
+            window.location.href = "?no_jurnal=" + noJurnal;
         };
     }
   </script>

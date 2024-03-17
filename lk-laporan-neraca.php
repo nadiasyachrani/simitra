@@ -12,66 +12,155 @@ if (!$conn) {
     die("Koneksi gagal: " . mysqli_connect_error());
 }
 
+// Query untuk mengambil data nama akun
+$sql = "SELECT nama_akun FROM keu_akun";
+$result = $conn->query($sql);
+
+// Mengisi dropdown dengan data nama akun
+$nama_akun_options = '';
+if ($result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    $nama_akun_options .= '<option value="' . $row['nama_akun'] . '">' . $row['nama_akun'] . '</option>';
+  }
+}
+
 // AWAL EDIT SESUAIKAN TABEL DATABASE
 // Menangani penambahan data baru
-if (isset($_POST['tanggal_login']) && isset($_POST['posisi']) && isset($_POST['username']) && isset($_POST['nama_lengkap']) && isset($_POST['keterangan'])) {
-  $tanggalLogin = $_POST['tanggal_login'];
-  $posisi = $_POST['posisi'];
-  $username = $_POST['username'];
-  $namaLengkap = $_POST['nama_lengkap'];
-  $keterangan = $_POST['keterangan'];
+if (
+  isset($_POST['no_jurnal']) &&
+  isset($_POST['tanggal_jurnal']) &&
+  isset($_POST['no_bukti']) &&
+  isset($_POST['uraian_jurnal']) &&
+  isset($_POST['kode_akun_debit']) &&
+  isset($_POST['nama_akun_debit']) &&
+  isset($_POST['debet']) &&
+  isset($_POST['kode_akun_kredit']) &&
+  isset($_POST['nama_akun_kredit']) &&
+  isset($_POST['kredit'])
+) {
+  $noJurnal = $_POST['no_jurnal'];
+  $tanggalJurnal = $_POST['tanggal_jurnal'];
+  $noBukti = $_POST['no_bukti'];
+  $uraianJurnal = $_POST['uraian_jurnal'];
+  $kodeAkunDebit = $_POST['kode_akun_debit'];
+  $namaAkunDebit = $_POST['nama_akun_debit'];
+  $debet = $_POST['debet'];
+  $kodeAkunKredit = $_POST['kode_akun_kredit'];
+  $namaAkunKredit = $_POST['nama_akun_kredit'];
+  $kredit = $_POST['kredit'];
 
-  $query = "INSERT INTO data_user_logs (tanggal_login, posisi, username, nama_lengkap, keterangan) VALUES ('$tanggalLogin', '$posisi', '$username', '$namaLengkap', '$keterangan')";
-  $result = mysqli_query($conn, $query);
+  // Insert into keu_jurnal
+  $queryJurnal = "INSERT INTO keu_jurnal (no_jurnal, tanggal_jurnal, no_bukti, uraian_jurnal) VALUES ('$noJurnal', '$tanggalJurnal', '$noBukti', '$uraianJurnal')";
+  $resultJurnal = mysqli_query($conn, $queryJurnal);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
+  if (!$resultJurnal) {
+      echo "Error: " . $queryJurnal . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Insert into keu_detail_jurnal for debit
+  $queryDetailJurnalDebit = "INSERT INTO keu_detail_jurnal (no_jurnal, kode_akun, nama_akun, debet) VALUES ('$noJurnal', '$kodeAkunDebit', '$namaAkunDebit', '$debet')";
+  $resultDetailJurnalDebit = mysqli_query($conn, $queryDetailJurnalDebit);
+
+  if (!$resultDetailJurnalDebit) {
+      echo "Error: " . $queryDetailJurnalDebit . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Insert into keu_detail_jurnal for kredit
+  $queryDetailJurnalKredit = "INSERT INTO keu_detail_jurnal (no_jurnal, kode_akun, nama_akun, kredit) VALUES ('$noJurnal', '$kodeAkunKredit', '$namaAkunKredit', '$kredit')";
+  $resultDetailJurnalKredit = mysqli_query($conn, $queryDetailJurnalKredit);
+
+  if (!$resultDetailJurnalKredit) {
+      echo "Error: " . $queryDetailJurnalKredit . "<br>" . mysqli_error($conn);
       exit();
   }
 }
 
 // Menangani pembaruan data
-if (isset($_POST['edit_tanggal_login']) && isset($_POST['edit_posisi']) && isset($_POST['edit_username']) && isset($_POST['edit_nama_lengkap']) && isset($_POST['edit_keterangan'])) {
-  $tanggalLogin = $_POST['edit_tanggal_login'];
-  $posisi = $_POST['edit_posisi'];
-  $username = $_POST['edit_username'];
-  $namaLengkap = $_POST['edit_nama_lengkap'];
-  $keterangan = $_POST['edit_keterangan'];
+if (isset($_POST['edit_no_jurnal']) && isset($_POST['edit_tanggal_jurnal']) && isset($_POST['edit_no_bukti']) && isset($_POST['edit_uraian_jurnal']) && isset($_POST['edit_kode_akun_debit']) && isset($_POST['edit_nama_akun_debit']) && isset($_POST['edit_debet']) && isset($_POST['edit_kode_akun_kredit']) && isset($_POST['edit_nama_akun_kredit']) && isset($_POST['edit_kredit'])) {
+  $noJurnal = $_POST['edit_no_jurnal'];
+  $tanggalJurnal = $_POST['edit_tanggal_jurnal'];
+  $noBukti = $_POST['edit_no_bukti'];
+  $uraianJurnal = $_POST['edit_uraian_jurnal'];
+  $kodeAkunDebit = $_POST['edit_kode_akun_debit'];
+  $namaAkunDebit = $_POST['edit_nama_akun_debit'];
+  $debet = $_POST['edit_debet'];
+  $kodeAkunKredit = $_POST['edit_kode_akun_kredit'];
+  $namaAkunKredit = $_POST['edit_nama_akun_kredit'];
+  $kredit = $_POST['edit_kredit'];
 
-  $query = "UPDATE data_user_logs SET posisi='$posisi', nama_lengkap='$namaLengkap', keterangan='$keterangan' WHERE username='$username' AND tanggal_login='$tanggalLogin'";
-  $result = mysqli_query($conn, $query);
+  // Update keu_jurnal
+  $queryJurnal = "UPDATE keu_jurnal SET tanggal_jurnal='$tanggalJurnal', no_bukti='$noBukti', uraian_jurnal='$uraianJurnal' WHERE no_jurnal='$noJurnal'";
+  $resultJurnal = mysqli_query($conn, $queryJurnal);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
+  if (!$resultJurnal) {
+      echo "Error: " . $queryJurnal . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Update keu_detail_jurnal (baris pertama)
+  $queryDetailJurnalDebit = "UPDATE keu_detail_jurnal SET kode_akun='$kodeAkunDebit', nama_akun='$namaAkunDebit', debet='$debet' WHERE no_jurnal='$noJurnal'";
+  $resultDetailJurnalDebit = mysqli_query($conn, $queryDetailJurnalDebit);
+
+  if (!$resultDetailJurnalDebit) {
+      echo "Error: " . $queryDetailJurnalDebit . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Update keu_detail_jurnal (baris kedua)
+  $queryDetailJurnalKredit = "UPDATE keu_detail_jurnal SET kode_akun='$kodeAkunKredit', nama_akun='$namaAkunKredit', kredit='$kredit' WHERE no_jurnal='$noJurnal'";
+  $resultDetailJurnalKredit = mysqli_query($conn, $queryDetailJurnalKredit);
+
+  if (!$resultDetailJurnalKredit) {
+      echo "Error: " . $queryDetailJurnalKredit . "<br>" . mysqli_error($conn);
       exit();
   }
 }
 
 // Menangani penghapusan data
-if (isset($_GET['tanggal_login']) && isset($_GET['posisi']) && isset($_GET['username']) && isset($_GET['keterangan'])) {
-  $tanggalLogin = $_GET['tanggal_login'];
-  $posisi = $_GET['posisi'];
-  $username = $_GET['username'];
-  $keterangan = $_GET['keterangan'];
+if (isset($_GET['no_jurnal'])) {
+  $noJurnal = $_GET['no_jurnal'];
 
-  $query = "DELETE FROM data_user_logs WHERE tanggal_login='$tanggalLogin' AND posisi='$posisi' AND username='$username' AND keterangan='$keterangan'";
-  $result = mysqli_query($conn, $query);
+  // Delete from keu_detail_jurnal
+  $queryDetailJurnal = "DELETE FROM keu_detail_jurnal WHERE no_jurnal='$noJurnal'";
+  $resultDetailJurnal = mysqli_query($conn, $queryDetailJurnal);
 
-  if (!$result) {
-      echo "Error: " . $query . "<br>" . mysqli_error($conn);
+  if (!$resultDetailJurnal) {
+      echo "Error: " . $queryDetailJurnal . "<br>" . mysqli_error($conn);
+      exit();
+  }
+
+  // Delete from keu_jurnal
+  $queryJurnal = "DELETE FROM keu_jurnal WHERE no_jurnal='$noJurnal'";
+  $resultJurnal = mysqli_query($conn, $queryJurnal);
+
+  if (!$resultJurnal) {
+      echo "Error: " . $queryJurnal . "<br>" . mysqli_error($conn);
       exit();
   }
 }
 
-// Mengambil data dari tabel data_user_logs
-$query_select_logs = "SELECT * FROM data_user_logs";
-$result_select_logs = mysqli_query($conn, $query_select_logs);
+// Mengambil data dari tabel keu_jurnal
+$query_select_jurnal = "SELECT * FROM keu_jurnal";
+$result_select_jurnal = mysqli_query($conn, $query_select_jurnal);
 
 // Memeriksa apakah query berhasil dieksekusi
-if (!$result_select_logs) {
-  echo "Error: " . $query_select_logs . "<br>" . mysqli_error($conn);
-  exit();
+if (!$result_select_jurnal) {
+    echo "Error: " . $query_select_jurnal . "<br>" . mysqli_error($conn);
+    exit();
 }
+
+// Mengambil data dari tabel keu_detail_jurnal
+$query_select_detail_jurnal = "SELECT * FROM keu_detail_jurnal";
+$result_select_detail_jurnal = mysqli_query($conn, $query_select_detail_jurnal);
+
+// Memeriksa apakah query berhasil dieksekusi
+if (!$result_select_detail_jurnal) {
+    echo "Error: " . $query_select_detail_jurnal . "<br>" . mysqli_error($conn);
+    exit();
+}
+
 // AKHIR EDIT SESUAIKAN TABEL DATABASE
 ?>
 
@@ -85,10 +174,11 @@ if (!$result_select_logs) {
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>SIMITRA - User Logs</title> <!-- EDIT NAMA -->
+  <title>SIMITRA - Laporan Posisi Keuangan</title> <!-- EDIT NAMA -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/simitra.min.css" rel="stylesheet">
+  <link href="css/simitra.css" rel="stylesheet">
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
@@ -365,10 +455,10 @@ if (!$result_select_logs) {
         <div class="container-fluid" id="container-wrapper">
           <!-- Your container content -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">User Logs</h1> <!-- EDIT NAMA -->
+            <h1 class="h3 mb-0 text-gray-800">Laporan Posisi Keuangan</h1> <!-- EDIT NAMA -->
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="./">Master</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Logs</li> <!-- EDIT NAMA -->
+              <li class="breadcrumb-item"><a href="./">Laporan Keuangan</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Laporan Posisi Keuangan</li> <!-- EDIT NAMA -->
             </ol>
           </div>
           <!-- Modal Konfirmasi Logout -->
@@ -391,43 +481,80 @@ if (!$result_select_logs) {
                   </div>
               </div>
           </div>
+          <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
 
           <!-- Row -->
           <div class="row">
             <!-- DataTable with Hover -->
             <div class="col-lg-12">
               <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Logs</h6> <!-- EDIT NAMA -->
-                  <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <!-- Tombol Filter Tanggal dengan Icon -->
-                    <div class="input-group">
-                      <input type="date" class="form-control-sm border-1" id="tanggalMulai" aria-describedby="tanggalMulaiLabel">
-                      <input type="date" class="form-control-sm border-1" id="tanggalAkhir" aria-describedby="tanggalAkhirLabel">
-                        <button type="button" class="btn btn-secondary btn-sm" style='width: 60px; height: 30px;' onclick="filterTanggal()">
-                          Filter
-                        </button>
-                    </div>
-                    <!-- Tombol Cetak Tabel dengan Icon -->
-                    <div>
-                      <button type="button" class="btn btn-sm btn-warning" style='width: 60px; height: 30px;' onclick="cetakTabel()">
-                        Cetak
-                      </button>
-                    </div>
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Laporan Posisi Keuangan</h6>
+                <div class="btn-group ml-auto" role="group" aria-label="Basic mixed styles example">
+                  <!-- Tombol Filter Pilih BUlan dan Tahun dengan Icon -->
+                  <div class="input-group">
+                    <label for="bulan" class="mb-0 mr-2">Bulan:</label>
+                    <select class="form-control-sm border-1" style="width: 120px; height: 30px;" id="bulan" onchange="filterData()">
+                      <option value="">Pilih Bulan</option>
+                      <option value="01">Januari</option>
+                      <option value="02">Februari</option>
+                      <option value="03">Maret</option>
+                      <option value="04">April</option>
+                      <option value="05">Mei</option>
+                      <option value="06">Juni</option>
+                      <option value="07">Juli</option>
+                      <option value="08">Agustus</option>
+                      <option value="09">September</option>
+                      <option value="10">Oktober</option>
+                      <option value="11">November</option>
+                      <option value="12">Desember</option>
+                    </select>
+                    <label for="tahun" class="mb-0 mr-2 ml-2">Tahun:</label>
+                    <select class="form-control-sm border-1" style="width: 120px; height: 30px;" id="tahun" onchange="filterData()">
+                      <option value="">Pilih Tahun</option>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                    </select>
+                    <button type="button" class="btn btn-secondary btn-sm" style="width: 60px; height: 30px;" onclick="filterData()">
+                      Filter
+                    </button>
                   </div>
+                  <!-- Tombol Cetak Tabel dengan Icon -->
+                  <div>
+                    <button type="button" class="btn btn-sm btn-warning" style="width: 60px; height: 30px;" onclick="cetakTabel()">
+                      Cetak
+                    </button>
+                  </div>
+                </div>
 
                     <!-- Skrip JavaScript untuk Filter Tanggal dan Cetak Tabel -->
                     <script>
-                    function filterTanggal() {
-                        var tanggalMulai = document.getElementById("tanggalMulai").value;
-                        var tanggalAkhir = document.getElementById("tanggalAkhir").value;
-                        
-                        // Lakukan sesuatu dengan tanggalMulai dan tanggalAkhir, misalnya menyaring data tabel
-                        // Anda dapat menambahkan logika Anda di sini
-                        console.log("Tanggal Mulai:", tanggalMulai);
-                        console.log("Tanggal Akhir:", tanggalAkhir);
-                    }
+                    function filterData() {
+                      var namaAkun = document.getElementById('namaAkun').value;
+                      var tanggalMulai = document.getElementById('tanggalMulai').value;
+                      var tanggalAkhir = document.getElementById('tanggalAkhir').value;
 
+                      // Ambil semua baris data yang ada dalam tabel
+                      var rows = document.querySelectorAll('#tabelData tr');
+
+                      // Loop melalui setiap baris data
+                      rows.forEach(function(row) {
+                        var namaAkunCell = row.cells[0].innerText; // Ambil data nama akun dari sel pertama
+                        var tanggalJurnalCell = row.cells[1].innerText; // Ambil data tanggal jurnal dari sel kedua
+
+                        // Periksa apakah baris data harus ditampilkan atau disembunyikan berdasarkan filter
+                        if ((namaAkun === '' || namaAkun === namaAkunCell) &&
+                            (tanggalMulai === '' || tanggalJurnalCell >= tanggalMulai) &&
+                            (tanggalAkhir === '' || tanggalJurnalCell <= tanggalAkhir)) {
+                          row.style.display = ''; // Tampilkan baris data
+                        } else {
+                          row.style.display = 'none'; // Sembunyikan baris data
+                        }
+                      });
+                    }
                     function cetakTabel() {
                         // Mencetak isi tabel yang sesuai dengan rentang tanggal yang dipilih
                         filterTanggal(); // Memanggil fungsi filterTanggal() untuk mendapatkan rentang tanggal yang dipilih
@@ -443,29 +570,25 @@ if (!$result_select_logs) {
                   <!-- AWAL EDIT SESUAIKAN TABEL DATABASE -->
                   <thead class="thead-light">
                       <tr>
-                      <th>Tanggal Login</th>
-                      <th>Posisi</th>
-                      <th>Username</th>
-                      <th>Nama Lengkap</th>
-                      <th>Keterangan</th>
+                          <th>Kode Akun</th>
+                          <th>Nama Akun</th>
+                          <th>Debet</th>
+                          <th>Kredit</th>
                       </tr>
                   </thead>
                   <tbody>
-                  <?php
-                    $query = "SELECT * FROM data_user_logs";
-                    $result = mysqli_query($conn, $query);
-                    while ($data = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>".$data['tanggal_login']."</td>";
-                        echo "<td>".$data['posisi']."</td>";
-                        echo "<td>".$data['username']."</td>";
-                        echo "<td>".$data['nama_lengkap']."</td>";
-                        echo "<td>".$data['keterangan']."</td>";
-                        echo "<td>";
-                        echo "</td>";
-                        echo "</tr>"; 
-                    }
-                  ?>
+                      <?php
+                          $query = "SELECT keu_detail_jurnal.kode_akun, keu_detail_jurnal.nama_akun, keu_detail_jurnal.debet, keu_detail_jurnal.kredit FROM keu_jurnal INNER JOIN keu_detail_jurnal ON keu_jurnal.no_jurnal = keu_detail_jurnal.no_jurnal";
+                          $result = mysqli_query($conn, $query);
+                          while ($data = mysqli_fetch_assoc($result)) {
+                            echo "<tr>";
+                            echo "<td>1110</span></td>"; 
+                            echo "<td>Kas</span></td>"; 
+                            echo "<td>20.000.000,00</span></td>"; 
+                            echo "<td>20.000.000,00</span></td>"; 
+                            echo "</tr>"; 
+                          }
+                      ?>
                   </tbody>
                   <!-- AKHIR EDIT SESUAIKAN TABEL DATABASE -->
                 </table>
